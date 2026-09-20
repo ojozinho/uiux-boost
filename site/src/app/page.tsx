@@ -3,11 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 
-const WireSphere = dynamic(() => import("@/components/WireSphere").then((m) => m.WireSphere), { ssr: false });
+const ModelViewer = dynamic(() => import("@/components/ModelViewer").then((m) => m.ModelViewer), { ssr: false });
+const CustomCursor = dynamic(() => import("@/components/CustomCursor").then((m) => m.CustomCursor), { ssr: false });
 
 export default function Home() {
   const [copied, setCopied] = useState(false);
   const [headerVisible, setHeaderVisible] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const heroRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -21,9 +23,16 @@ export default function Home() {
     mo.observe(document.body, { childList: true, subtree: true });
 
     const handleScroll = () => setHeaderVisible(window.scrollY > 100);
+    const handleMouse = (e: MouseEvent) => {
+      setMousePos({
+        x: (e.clientX / window.innerWidth - 0.5) * 20,
+        y: (e.clientY / window.innerHeight - 0.5) * 20,
+      });
+    };
     window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("mousemove", handleMouse, { passive: true });
 
-    return () => { observer.disconnect(); mo.disconnect(); window.removeEventListener("scroll", handleScroll); };
+    return () => { observer.disconnect(); mo.disconnect(); window.removeEventListener("scroll", handleScroll); window.removeEventListener("mousemove", handleMouse); };
   }, []);
 
   const copyCommand = () => {
@@ -34,6 +43,8 @@ export default function Home() {
 
   return (
     <div className="grain" style={{ minHeight: "100vh" }}>
+      <CustomCursor />
+      <ModelViewer />
 
       {/* ═══ STICKY HEADER ═══ */}
       <header
@@ -57,13 +68,8 @@ export default function Home() {
       {/* ═══ HERO ═══ */}
       <section ref={heroRef} style={{ minHeight: "100vh", display: "flex", flexDirection: "column", position: "relative", overflow: "hidden" }}>
 
-        {/* 3D Sphere background */}
-        <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
-          <WireSphere />
-        </div>
-
-        {/* Radial glow */}
-        <div style={{ position: "absolute", top: "30%", left: "50%", transform: "translate(-50%, -50%)", width: 600, height: 600, background: "radial-gradient(circle, rgba(200,191,231,0.08) 0%, transparent 70%)", zIndex: 0, pointerEvents: "none" }} />
+        {/* Radial glow — follows mouse */}
+        <div style={{ position: "absolute", top: "30%", left: "50%", transform: `translate(calc(-50% + ${mousePos.x * 2}px), calc(-50% + ${mousePos.y * 2}px))`, width: 700, height: 700, background: "radial-gradient(circle, rgba(200,191,231,0.07) 0%, transparent 60%)", zIndex: 0, pointerEvents: "none", transition: "transform 0.3s ease-out" }} />
 
         {/* Nav */}
         <nav style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "24px clamp(20px, 4vw, 60px)", position: "relative", zIndex: 10 }}>
@@ -82,7 +88,7 @@ export default function Home() {
             </div>
 
             <div data-reveal className="delay-1">
-              <img src="/logo.png" alt="UI/UX BOOST" style={{ width: "clamp(300px, 55vw, 750px)", height: "auto", margin: "0 auto", display: "block", filter: "brightness(1.1) contrast(1.1)", animation: "glow-pulse 4s ease-in-out infinite" }} />
+              <img src="/logo.png" alt="UI/UX BOOST" style={{ width: "clamp(300px, 55vw, 750px)", height: "auto", margin: "0 auto", display: "block", filter: "brightness(1.1) contrast(1.1)", animation: "glow-pulse 4s ease-in-out infinite", transform: `translate(${mousePos.x * 0.5}px, ${mousePos.y * 0.5}px)`, transition: "transform 0.2s ease-out" }} />
             </div>
 
             <p data-reveal className="delay-2" style={{ fontSize: "clamp(15px, 1.6vw, 19px)", color: "var(--text-secondary)", marginTop: 28, lineHeight: 1.7, maxWidth: 500, margin: "28px auto 0" }}>
