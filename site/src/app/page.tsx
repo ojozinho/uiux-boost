@@ -1,311 +1,392 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
+
+const WireSphere = dynamic(() => import("@/components/WireSphere").then((m) => m.WireSphere), { ssr: false });
 
 export default function Home() {
+  const [copied, setCopied] = useState(false);
+  const [headerVisible, setHeaderVisible] = useState(false);
+  const heroRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add("revealed"); }),
-      { threshold: 0.05, rootMargin: "0px 0px -30px 0px" }
+      { threshold: 0.08, rootMargin: "0px 0px -40px 0px" }
     );
     const run = () => document.querySelectorAll("[data-reveal]").forEach((el) => observer.observe(el));
     run();
     const mo = new MutationObserver(run);
     mo.observe(document.body, { childList: true, subtree: true });
-    return () => { observer.disconnect(); mo.disconnect(); };
+
+    const handleScroll = () => setHeaderVisible(window.scrollY > 100);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => { observer.disconnect(); mo.disconnect(); window.removeEventListener("scroll", handleScroll); };
   }, []);
 
+  const copyCommand = () => {
+    navigator.clipboard.writeText("/figma-faithful");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
-    <div style={{ minHeight: "100vh", background: "var(--bg)" }}>
+    <div className="grain" style={{ minHeight: "100vh" }}>
 
-      {/* ═══════ HERO SECTION ═══════ */}
-      <section style={{ minHeight: "85vh", display: "flex", flexDirection: "column", position: "relative", overflow: "hidden" }}>
+      {/* ═══ STICKY HEADER ═══ */}
+      <header
+        className="header-blur"
+        style={{
+          position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
+          padding: "0 clamp(20px, 4vw, 60px)",
+          height: 56, display: "flex", alignItems: "center", justifyContent: "space-between",
+          transform: headerVisible ? "translateY(0)" : "translateY(-100%)",
+          transition: "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+        }}
+      >
+        <span className="font-display" style={{ fontWeight: 800, fontSize: 13, letterSpacing: "0.15em" }}>UI/UX BOOST</span>
+        <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
+          <a href="#features" style={{ fontSize: 12, color: "var(--text-secondary)", textDecoration: "none", letterSpacing: "0.05em" }}>Features</a>
+          <a href="#install" style={{ fontSize: 12, color: "var(--text-secondary)", textDecoration: "none", letterSpacing: "0.05em" }}>Install</a>
+          <a href="https://github.com/ojozinho/uiux-boost" target="_blank" rel="noopener noreferrer" style={{ fontSize: 12, color: "var(--accent)", textDecoration: "none", fontWeight: 600, letterSpacing: "0.05em" }}>GitHub</a>
+        </div>
+      </header>
 
-        {/* Top bar */}
-        <nav style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px clamp(20px, 4vw, 60px)", position: "relative", zIndex: 10 }}>
-          <div className="font-display" style={{ fontWeight: 800, fontSize: 14, letterSpacing: "0.1em" }}>UI/UX BOOST</div>
-          <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
-            <span className="font-mono" style={{ fontSize: 11, color: "var(--text-muted)" }}>2026</span>
-            <a href="https://github.com/ojozinho/uiux-boost" target="_blank" rel="noopener noreferrer" className="font-mono" style={{ fontSize: 11, color: "var(--text-secondary)", textDecoration: "none", borderBottom: "1px solid var(--border)" }}>GITHUB</a>
+      {/* ═══ HERO ═══ */}
+      <section ref={heroRef} style={{ minHeight: "100vh", display: "flex", flexDirection: "column", position: "relative", overflow: "hidden" }}>
+
+        {/* 3D Sphere background */}
+        <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
+          <WireSphere />
+        </div>
+
+        {/* Radial glow */}
+        <div style={{ position: "absolute", top: "30%", left: "50%", transform: "translate(-50%, -50%)", width: 600, height: 600, background: "radial-gradient(circle, rgba(200,191,231,0.08) 0%, transparent 70%)", zIndex: 0, pointerEvents: "none" }} />
+
+        {/* Nav */}
+        <nav style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "24px clamp(20px, 4vw, 60px)", position: "relative", zIndex: 10 }}>
+          <span className="font-display" style={{ fontWeight: 800, fontSize: 13, letterSpacing: "0.15em" }}>UI/UX BOOST</span>
+          <div style={{ display: "flex", gap: 20, alignItems: "center" }}>
+            <span className="font-mono" style={{ fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.1em" }}>2026</span>
+            <a href="https://github.com/ojozinho/uiux-boost" target="_blank" rel="noopener noreferrer" className="font-mono" style={{ fontSize: 10, color: "var(--text-secondary)", textDecoration: "none" }}>GITHUB &#8599;</a>
           </div>
         </nav>
 
         {/* Hero content */}
-        <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "0 clamp(20px, 4vw, 60px)" }}>
-          <div style={{ maxWidth: 1400, width: "100%", position: "relative" }}>
-
-            {/* Decorative circles */}
-            <div className="circle-deco" style={{ position: "absolute", width: 320, height: 320, background: "var(--bg-lavender)", top: -40, right: "10%", zIndex: 0, opacity: 0.6 }} />
-            <div className="circle-deco" style={{ position: "absolute", width: 160, height: 160, background: "var(--bg-lavender-light)", bottom: -20, left: "5%", zIndex: 0 }} />
-
-            {/* Logo + Title composition */}
-            <div data-reveal style={{ position: "relative", zIndex: 2, textAlign: "center" }}>
-              <img src="/logo.png" alt="UI/UX BOOST" style={{ width: "clamp(280px, 50vw, 700px)", height: "auto", margin: "0 auto", display: "block", filter: "invert(1)", mixBlendMode: "multiply" }} />
-              <p className="font-display" style={{ fontSize: "clamp(14px, 1.5vw, 18px)", color: "var(--text-secondary)", marginTop: 24, maxWidth: 520, margin: "24px auto 0", lineHeight: 1.7 }}>
-                Pixel-perfect from Figma. Fully responsive. Screenshot-verified. Zero AI slop.
-              </p>
+        <div style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "0 clamp(20px, 4vw, 60px)", position: "relative", zIndex: 2 }}>
+          <div style={{ textAlign: "center", maxWidth: 900 }}>
+            <div data-reveal style={{ marginBottom: 20 }}>
+              <span className="font-mono" style={{ fontSize: 11, letterSpacing: "0.3em", color: "var(--accent-dim)" }}>CLAUDE CODE SKILL</span>
             </div>
 
-            {/* Floating labels */}
-            <div data-reveal className="delay-2" style={{ position: "absolute", top: "15%", left: 0, zIndex: 3 }}>
-              <div style={{ background: "var(--bg-dark)", color: "var(--text-white)", padding: "8px 16px", border: "2px solid var(--border-heavy)", fontFamily: "'JetBrains Mono', monospace", fontSize: 11 }}>
-                CLAUDE CODE SKILL
-              </div>
+            <div data-reveal className="delay-1">
+              <img src="/logo.png" alt="UI/UX BOOST" style={{ width: "clamp(300px, 55vw, 750px)", height: "auto", margin: "0 auto", display: "block", filter: "brightness(1.1) contrast(1.1)", animation: "glow-pulse 4s ease-in-out infinite" }} />
             </div>
-            <div data-reveal="right" className="delay-3" style={{ position: "absolute", bottom: "20%", right: 0, zIndex: 3 }}>
-              <div style={{ background: "var(--bg-lavender)", padding: "8px 16px", border: "2px solid var(--border-heavy)", fontFamily: "'JetBrains Mono', monospace", fontSize: 11 }}>
-                FIGMA &#8594; CODE
-              </div>
+
+            <p data-reveal className="delay-2" style={{ fontSize: "clamp(15px, 1.6vw, 19px)", color: "var(--text-secondary)", marginTop: 28, lineHeight: 1.7, maxWidth: 500, margin: "28px auto 0" }}>
+              Pixel-perfect from Figma. Fully responsive.
+              <br />
+              Screenshot-verified. <span style={{ color: "var(--accent)" }}>Zero AI slop.</span>
+            </p>
+
+            {/* CTA Buttons */}
+            <div data-reveal className="delay-3" style={{ display: "flex", gap: 16, justifyContent: "center", marginTop: 40, flexWrap: "wrap" }}>
+              <a href="#install" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "var(--accent)", color: "var(--bg)", padding: "14px 32px", fontWeight: 600, fontSize: 14, letterSpacing: "0.05em", textDecoration: "none", border: "none", transition: "all 0.3s", cursor: "pointer" }}>
+                Get Started
+                <span style={{ fontSize: 16 }}>&#8595;</span>
+              </a>
+              <a href="https://github.com/ojozinho/uiux-boost" target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "transparent", color: "var(--text-primary)", padding: "14px 32px", fontWeight: 500, fontSize: 14, letterSpacing: "0.05em", textDecoration: "none", border: "1px solid var(--border-accent)", transition: "all 0.3s" }}>
+                Source Code &#8599;
+              </a>
             </div>
           </div>
         </div>
 
-        {/* Marquee */}
-        <div style={{ borderTop: "2px solid var(--border-heavy)", borderBottom: "2px solid var(--border-heavy)", padding: "10px 0", overflow: "hidden", background: "var(--bg-dark)", color: "var(--text-white)" }}>
-          <div style={{ display: "flex", whiteSpace: "nowrap", animation: "marquee 30s linear infinite" }}>
-            {Array.from({ length: 10 }).map((_, i) => (
-              <span key={i} className="font-mono" style={{ margin: "0 32px", fontSize: 11, fontWeight: 500, letterSpacing: "0.15em" }}>
-                PIXEL-PERFECT <span style={{ color: "var(--bg-lavender)" }}>&#9670;</span> ANTI-SLOP <span style={{ color: "var(--bg-lavender)" }}>&#9670;</span> RESPONSIVE <span style={{ color: "var(--bg-lavender)" }}>&#9670;</span> SCREENSHOT-VERIFIED <span style={{ color: "var(--bg-lavender)" }}>&#9670;</span> FIGMA-FAITHFUL
-              </span>
-            ))}
+        {/* Scroll indicator */}
+        <div style={{ textAlign: "center", paddingBottom: 32, position: "relative", zIndex: 2 }}>
+          <div style={{ display: "inline-flex", flexDirection: "column", alignItems: "center", gap: 8, animation: "float 3s ease-in-out infinite" }}>
+            <span className="font-mono" style={{ fontSize: 9, letterSpacing: "0.3em", color: "var(--text-muted)" }}>SCROLL</span>
+            <div style={{ width: 1, height: 32, background: "linear-gradient(to bottom, var(--text-muted), transparent)" }} />
           </div>
         </div>
       </section>
 
-      {/* ═══════ SLIDES GRID ═══════ */}
-      <section style={{ padding: "clamp(40px, 6vw, 80px) clamp(20px, 4vw, 60px)" }}>
-        <div style={{ maxWidth: 1400, margin: "0 auto" }}>
+      {/* ═══ MARQUEE ═══ */}
+      <div style={{ borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", padding: "12px 0", overflow: "hidden", background: "var(--bg)" }}>
+        <div style={{ display: "flex", whiteSpace: "nowrap", animation: "marquee 35s linear infinite" }}>
+          {Array.from({ length: 12 }).map((_, i) => (
+            <span key={i} className="font-mono" style={{ margin: "0 40px", fontSize: 10, fontWeight: 500, letterSpacing: "0.2em", color: "var(--text-muted)" }}>
+              PIXEL-PERFECT <span style={{ color: "var(--accent-dim)" }}>&#9670;</span> ANTI-SLOP <span style={{ color: "var(--accent-dim)" }}>&#9670;</span> RESPONSIVE <span style={{ color: "var(--accent-dim)" }}>&#9670;</span> SCREENSHOT-VERIFIED <span style={{ color: "var(--accent-dim)" }}>&#9670;</span> FIGMA-FAITHFUL
+            </span>
+          ))}
+        </div>
+      </div>
 
-          {/* Row 1: 3 slides */}
-          <div className="grid-bento" style={{ display: "grid", gridTemplateColumns: "repeat(12, 1fr)", gap: 16, marginBottom: 16 }}>
+      {/* ═══ GIANT TYPOGRAPHY SECTION — Opium style ═══ */}
+      <section style={{ padding: "clamp(60px, 8vw, 100px) 0", overflow: "hidden", position: "relative" }}>
+        {/* Radial glow behind */}
+        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 800, height: 400, background: "radial-gradient(ellipse, rgba(200,191,231,0.06) 0%, transparent 70%)", pointerEvents: "none" }} />
 
-            {/* Slide: Terminal Demo */}
-            <div data-reveal className="card-dark span-full-tablet" style={{ gridColumn: "span 5", padding: "clamp(28px, 3vw, 48px)", minHeight: 400, display: "flex", flexDirection: "column", position: "relative", overflow: "hidden" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 24 }}>
-                <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#E55" }} />
-                <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#ED5" }} />
-                <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#5E5" }} />
-                <span className="font-mono" style={{ marginLeft: 12, fontSize: 10, color: "#666", letterSpacing: "0.05em" }}>terminal</span>
-              </div>
-              <div className="font-mono" style={{ fontSize: 12, lineHeight: 2.2, flex: 1 }}>
-                <div><span style={{ color: "#8BA460" }}>$</span> /figma-faithful</div>
-                <div style={{ color: "var(--bg-lavender)" }}>&#9670; UI/UX BOOST activated</div>
-                <div style={{ color: "#9A9595" }}>bora meter bronca. manda o link.</div>
-                <div style={{ marginTop: 8 }}><span style={{ color: "#8BA460" }}>$</span> figma.com/design/abc...</div>
-                <div style={{ color: "#9A9595" }}>&#9654; extracting tokens...</div>
-                <div style={{ color: "#9A9595" }}>&#9654; typography: <span style={{ color: "#F5F2ED" }}>Estrella</span> + <span style={{ color: "#F5F2ED" }}>DM Sans</span></div>
-                <div style={{ color: "#9A9595" }}>&#9654; palette: <span style={{ color: "#F5F2ED" }}>6 colors</span> &#8594; CSS vars</div>
-                <div style={{ color: "var(--bg-lavender)", marginTop: 8 }}>&#9670; building 1/5...</div>
-                <div style={{ color: "#8BA460" }}>&#10003; 375px screenshot matches</div>
-                <div style={{ color: "#8BA460" }}>&#10003; 1440px screenshot matches</div>
-              </div>
-              <div className="font-mono" style={{ fontSize: 9, color: "#555", marginTop: 16 }}>tip: Alt+V cola screenshots no terminal</div>
-            </div>
+        {/* Full-width stretched text lines */}
+        <div data-reveal style={{ textAlign: "center", position: "relative", zIndex: 2 }}>
+          <div className="font-display" style={{ fontSize: "clamp(60px, 12vw, 180px)", fontWeight: 800, lineHeight: 0.85, letterSpacing: "-0.03em", textTransform: "uppercase", color: "var(--text-primary)" }}>
+            SCREENSHOT
+          </div>
+          <div className="font-display" style={{ fontSize: "clamp(60px, 12vw, 180px)", fontWeight: 800, lineHeight: 0.85, letterSpacing: "-0.03em", textTransform: "uppercase", color: "transparent", WebkitTextStroke: "1px var(--text-primary)" }}>
+            VERIFIED
+          </div>
+        </div>
 
-            {/* Slide: Big typography */}
-            <div data-reveal className="delay-1 card-lavender span-full-tablet" style={{ gridColumn: "span 4", padding: "clamp(28px, 3vw, 48px)", minHeight: 400, display: "flex", flexDirection: "column", justifyContent: "center", position: "relative", overflow: "hidden" }}>
-              <div className="circle-deco" style={{ position: "absolute", width: 180, height: 180, background: "var(--bg-lavender-dark)", top: -30, right: -30, opacity: 0.3 }} />
-              <span className="font-mono" style={{ fontSize: 10, letterSpacing: "0.3em", color: "var(--bg-dark)", opacity: 0.5, marginBottom: 16 }}>WHAT IT DOES</span>
-              <h2 className="font-estrella" style={{ fontSize: "clamp(36px, 5vw, 64px)", lineHeight: 0.95, color: "var(--bg-dark)" }}>
-                Figma
-                <br />
-                <span style={{ fontStyle: "italic" }}>to</span>
-                <br />
-                Code
-              </h2>
-              <p style={{ marginTop: 20, fontSize: 14, color: "var(--bg-dark)", opacity: 0.7, lineHeight: 1.6, maxWidth: 240 }}>
-                Every font, color, spacing value — extracted and implemented automatically.
-              </p>
-            </div>
+        {/* Ticker band */}
+        <div style={{ marginTop: 40, borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", padding: "8px 0", overflow: "hidden", background: "var(--text-primary)", color: "var(--bg)" }}>
+          <div style={{ display: "flex", whiteSpace: "nowrap", animation: "marquee 20s linear infinite reverse" }}>
+            {Array.from({ length: 16 }).map((_, i) => (
+              <span key={i} className="font-mono" style={{ margin: "0 24px", fontSize: 10, fontWeight: 700, letterSpacing: "0.2em" }}>
+                UI/UX BOOST &#9670; ANTAGONIST TO AI SLOP &#9670; PIXEL PERFECT &#9670; 2026
+              </span>
+            ))}
+          </div>
+        </div>
 
-            {/* Slide: Stats */}
-            <div data-reveal className="delay-2 card-brutal span-full-tablet" style={{ gridColumn: "span 3", padding: "clamp(24px, 2vw, 36px)", minHeight: 400, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-              <span className="font-mono" style={{ fontSize: 10, letterSpacing: "0.3em", color: "var(--text-muted)" }}>BY THE NUMBERS</span>
-              <div>
-                <div style={{ borderBottom: "1px solid var(--border)", paddingBottom: 16, marginBottom: 16 }}>
-                  <div className="font-estrella" style={{ fontSize: 48, lineHeight: 1 }}>40+</div>
-                  <div className="font-mono" style={{ fontSize: 11, color: "var(--text-secondary)", marginTop: 4 }}>AI patterns banned</div>
-                </div>
-                <div style={{ borderBottom: "1px solid var(--border)", paddingBottom: 16, marginBottom: 16 }}>
-                  <div className="font-estrella" style={{ fontSize: 48, lineHeight: 1 }}>12+</div>
-                  <div className="font-mono" style={{ fontSize: 11, color: "var(--text-secondary)", marginTop: 4 }}>viewports tested</div>
-                </div>
-                <div>
-                  <div className="font-estrella" style={{ fontSize: 48, lineHeight: 1 }}>5</div>
-                  <div className="font-mono" style={{ fontSize: 11, color: "var(--text-secondary)", marginTop: 4 }}>phase pipeline</div>
-                </div>
-              </div>
-            </div>
+        {/* Second text block */}
+        <div data-reveal className="delay-1" style={{ textAlign: "center", marginTop: 40, position: "relative", zIndex: 2 }}>
+          <div className="font-display" style={{ fontSize: "clamp(60px, 12vw, 180px)", fontWeight: 800, lineHeight: 0.85, letterSpacing: "-0.03em", textTransform: "uppercase", color: "transparent", WebkitTextStroke: "1px var(--accent-dim)" }}>
+            FIGMA
+          </div>
+          <div className="font-estrella" style={{ fontSize: "clamp(50px, 10vw, 150px)", lineHeight: 0.9, color: "var(--accent)", marginTop: -10 }}>
+            to Code
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ FEATURES ═══ */}
+      <section id="features" style={{ padding: "clamp(80px, 10vw, 140px) clamp(20px, 4vw, 60px)" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+
+          <div data-reveal style={{ marginBottom: 60 }}>
+            <span className="font-mono" style={{ fontSize: 10, letterSpacing: "0.3em", color: "var(--accent-dim)" }}>WHAT IT DOES</span>
+            <h2 className="font-estrella" style={{ fontSize: "clamp(40px, 6vw, 80px)", lineHeight: 0.95, marginTop: 12 }}>
+              Not another
+              <br /><span className="text-gradient">code generator.</span>
+            </h2>
           </div>
 
-          {/* Row 2: 4 slides */}
-          <div className="grid-bento" style={{ display: "grid", gridTemplateColumns: "repeat(12, 1fr)", gap: 16, marginBottom: 16 }}>
+          {/* Feature cards — horizontal scroll on mobile, grid on desktop */}
+          <div className="scroll-x grid-responsive" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
 
-            {/* Slide: Pipeline */}
-            <div data-reveal className="card-brutal" style={{ gridColumn: "span 3", padding: "clamp(24px, 2vw, 36px)", minHeight: 320 }}>
-              <span className="font-mono" style={{ fontSize: 10, letterSpacing: "0.3em", color: "var(--text-muted)", display: "block", marginBottom: 24 }}>PIPELINE</span>
-              <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
-                {[
-                  { n: "01", label: "EXTRACT", color: "var(--bg-lavender-dark)" },
-                  { n: "02", label: "IMPLEMENT", color: "var(--olive)" },
-                  { n: "03", label: "SCREENSHOT", color: "var(--burnt)" },
-                  { n: "04", label: "COMPARE", color: "var(--bg-lavender-dark)" },
-                  { n: "05", label: "FIX & SHIP", color: "var(--olive)" },
-                ].map((s, i) => (
-                  <div key={s.n} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 0", borderBottom: i < 4 ? "1px solid var(--border)" : "none" }}>
-                    <span className="font-mono" style={{ fontSize: 10, color: s.color, fontWeight: 700, width: 20 }}>{s.n}</span>
-                    <span className="font-display" style={{ fontWeight: 700, fontSize: 13, letterSpacing: "0.08em", color: s.color }}>{s.label}</span>
-                  </div>
-                ))}
+            {/* Card: Terminal */}
+            <div data-reveal className="card" style={{ padding: "clamp(24px, 3vw, 40px)", minHeight: 360, display: "flex", flexDirection: "column", minWidth: 300 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 24 }}>
+                <div style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--red)" }} />
+                <div style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--gold)" }} />
+                <div style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--green)" }} />
+                <span className="font-mono" style={{ marginLeft: 8, fontSize: 9, color: "var(--text-muted)" }}>terminal</span>
               </div>
-              <div className="font-mono" style={{ marginTop: 16, fontSize: 9, color: "var(--text-muted)", letterSpacing: "0.2em", textAlign: "center" }}>LOOP UNTIL PERFECT</div>
+              <div className="font-mono" style={{ fontSize: 11, lineHeight: 2.2, flex: 1 }}>
+                <div><span style={{ color: "var(--green)" }}>$</span> /figma-faithful</div>
+                <div style={{ color: "var(--accent)" }}>&#9670; UI/UX BOOST activated</div>
+                <div style={{ color: "var(--text-muted)" }}>bora meter bronca. manda o link.</div>
+                <div style={{ marginTop: 6 }}><span style={{ color: "var(--green)" }}>$</span> figma.com/design/abc...</div>
+                <div style={{ color: "var(--text-muted)" }}>&#9654; extracting tokens...</div>
+                <div style={{ color: "var(--text-muted)" }}>&#9654; typography: <span style={{ color: "var(--text-primary)" }}>Estrella + DM Sans</span></div>
+                <div style={{ color: "var(--accent)", marginTop: 6 }}>&#9670; building 1/5...</div>
+                <div style={{ color: "var(--green)" }}>&#10003; 375px matches</div>
+                <div style={{ color: "var(--green)" }}>&#10003; 1440px matches</div>
+              </div>
             </div>
 
-            {/* Slide: Banned */}
-            <div data-reveal className="delay-1 card-brutal" style={{ gridColumn: "span 3", padding: "clamp(24px, 2vw, 36px)", minHeight: 320 }}>
-              <span className="font-mono" style={{ fontSize: 10, letterSpacing: "0.3em", color: "var(--burnt)", display: "block", marginBottom: 20 }}>&#10005; BANNED</span>
-              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                {["Inter / Roboto", "Purple gradients", "3 identical cards", "Glassmorphism", "Emoji as icons", "Uniform radius"].map((item) => (
-                  <div key={item} style={{ display: "flex", alignItems: "center", gap: 8, padding: "7px 10px", background: "var(--bg)", border: "1px solid var(--border)" }}>
-                    <span style={{ color: "var(--burnt)", fontSize: 11, fontWeight: 700 }}>&#10005;</span>
+            {/* Card: Screenshot Loop */}
+            <div data-reveal className="delay-1 card" style={{ padding: "clamp(24px, 3vw, 40px)", minHeight: 360, display: "flex", flexDirection: "column", justifyContent: "space-between", minWidth: 300 }}>
+              <div>
+                <span className="font-mono" style={{ fontSize: 10, letterSpacing: "0.2em", color: "var(--accent-dim)" }}>SCREENSHOT LOOP</span>
+                <h3 className="font-display" style={{ fontWeight: 700, fontSize: 22, marginTop: 12 }}>Build. Capture. Compare.</h3>
+                <p style={{ color: "var(--text-secondary)", fontSize: 14, marginTop: 12, lineHeight: 1.7 }}>
+                  Every viewport is screenshotted and compared against your Figma. Differences are caught, fixed, and re-verified.
+                </p>
+              </div>
+              <div style={{ marginTop: 24 }}>
+                <div style={{ display: "flex", gap: 8 }}>
+                  <div style={{ flex: 1, background: "var(--accent-dim)", border: "1px solid var(--border)", height: 70, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <span className="font-mono" style={{ fontSize: 8, color: "var(--text-primary)", letterSpacing: "0.15em" }}>FIGMA</span>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", color: "var(--text-muted)", fontSize: 14 }}>&#8644;</div>
+                  <div style={{ flex: 1, background: "var(--surface)", border: "1px solid var(--border)", height: 70, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <span className="font-mono" style={{ fontSize: 8, color: "var(--text-muted)", letterSpacing: "0.15em" }}>BUILD</span>
+                  </div>
+                </div>
+                <div className="font-mono" style={{ textAlign: "center", fontSize: 11, color: "var(--green)", marginTop: 10 }}>&#10003; 98% pixel match</div>
+              </div>
+            </div>
+
+            {/* Card: Anti-slop */}
+            <div data-reveal className="delay-2 card" style={{ padding: "clamp(24px, 3vw, 40px)", minHeight: 360, display: "flex", flexDirection: "column", minWidth: 300 }}>
+              <span className="font-mono" style={{ fontSize: 10, letterSpacing: "0.2em", color: "var(--red)" }}>ANTI-SLOP ENGINE</span>
+              <h3 className="font-display" style={{ fontWeight: 700, fontSize: 22, marginTop: 12 }}>40+ AI patterns banned.</h3>
+              <div style={{ marginTop: 20, display: "flex", flexDirection: "column", gap: 6, flex: 1 }}>
+                {["Inter / Roboto", "Purple gradients", "3 identical cards", "Glassmorphism", "Emoji as icons", "Uniform radius", "Stock hero images"].map((item) => (
+                  <div key={item} style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 10px", borderLeft: "2px solid var(--red)" }}>
+                    <span style={{ color: "var(--red)", fontSize: 10, fontWeight: 700 }}>&#10005;</span>
                     <span className="font-mono" style={{ fontSize: 11, color: "var(--text-secondary)" }}>{item}</span>
                   </div>
                 ))}
               </div>
             </div>
-
-            {/* Slide: Quote */}
-            <div data-reveal="scale" className="delay-2 card-lavender" style={{ gridColumn: "span 3", padding: "clamp(28px, 3vw, 44px)", minHeight: 320, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center" }}>
-              <blockquote className="font-estrella" style={{ fontSize: "clamp(24px, 2.5vw, 36px)", lineHeight: 1.15, color: "var(--bg-dark)" }}>
-                &ldquo;If it looks
-                <br />like AI made it,
-                <br />
-                <span style={{ color: "var(--bg-lavender-dark)" }}>we failed.&rdquo;</span>
-              </blockquote>
-              <p className="font-mono" style={{ marginTop: 20, fontSize: 9, letterSpacing: "0.25em", color: "var(--bg-dark)", opacity: 0.4 }}>
-                THE ONLY RULE
-              </p>
-            </div>
-
-            {/* Slide: Screenshot comparison */}
-            <div data-reveal className="delay-3 card-dark" style={{ gridColumn: "span 3", padding: "clamp(24px, 2vw, 36px)", minHeight: 320, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-              <span className="font-mono" style={{ fontSize: 10, letterSpacing: "0.3em", color: "var(--bg-lavender)" }}>SCREENSHOT LOOP</span>
-              <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 12, marginTop: 20 }}>
-                <div style={{ display: "flex", gap: 8 }}>
-                  <div style={{ flex: 1, background: "var(--bg-lavender)", border: "1px solid #333", height: 80, display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
-                    <span className="font-mono" style={{ fontSize: 8, color: "var(--bg-dark)", letterSpacing: "0.1em" }}>FIGMA</span>
-                    <div style={{ position: "absolute", top: 4, left: 4, display: "flex", gap: 2 }}>
-                      <div style={{ width: 4, height: 4, borderRadius: "50%", background: "#666" }} />
-                      <div style={{ width: 4, height: 4, borderRadius: "50%", background: "#666" }} />
-                    </div>
-                  </div>
-                  <div style={{ flex: 1, background: "#222", border: "1px solid #333", height: 80, display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
-                    <span className="font-mono" style={{ fontSize: 8, color: "#888", letterSpacing: "0.1em" }}>BUILD</span>
-                    <div style={{ position: "absolute", top: 4, left: 4, display: "flex", gap: 2 }}>
-                      <div style={{ width: 4, height: 4, borderRadius: "50%", background: "#666" }} />
-                      <div style={{ width: 4, height: 4, borderRadius: "50%", background: "#666" }} />
-                    </div>
-                  </div>
-                </div>
-                <div style={{ textAlign: "center" }}>
-                  <span className="font-mono" style={{ fontSize: 10, color: "#8BA460" }}>&#10003; 98% match</span>
-                </div>
-                <div style={{ display: "flex", gap: 6, justifyContent: "center", alignItems: "flex-end", marginTop: 8 }}>
-                  <div style={{ width: 16, height: 28, border: "1px solid #444", borderRadius: 2 }} />
-                  <div style={{ width: 24, height: 20, border: "1px solid #444", borderRadius: 2 }} />
-                  <div style={{ width: 36, height: 22, border: "1px solid #444", borderRadius: 2 }} />
-                  <div style={{ width: 48, height: 24, border: "1px solid #444", borderRadius: 2 }} />
-                </div>
-                <div className="font-mono" style={{ fontSize: 9, color: "#555", textAlign: "center" }}>375 &bull; 768 &bull; 1024 &bull; 1440</div>
-              </div>
-            </div>
           </div>
+        </div>
+      </section>
 
-          {/* Row 3: 2 wide slides */}
-          <div className="grid-bento" style={{ display: "grid", gridTemplateColumns: "repeat(12, 1fr)", gap: 16, marginBottom: 16 }}>
+      {/* ═══ PIPELINE ═══ */}
+      <section style={{ padding: "clamp(60px, 8vw, 100px) clamp(20px, 4vw, 60px)", borderTop: "1px solid var(--border)" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+          <div className="grid-responsive" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "clamp(40px, 6vw, 80px)", alignItems: "center" }}>
 
-            {/* Slide: Features */}
-            <div data-reveal className="card-brutal span-full-tablet" style={{ gridColumn: "span 7", padding: "clamp(32px, 4vw, 56px)", minHeight: 300, position: "relative", overflow: "hidden" }}>
-              <div className="circle-deco" style={{ position: "absolute", width: 200, height: 200, background: "var(--bg-lavender-light)", top: -60, right: -40, opacity: 0.4 }} />
-              <span className="font-mono" style={{ fontSize: 10, letterSpacing: "0.3em", color: "var(--text-muted)", position: "relative", zIndex: 2 }}>FEATURES</span>
-              <h2 className="font-estrella" style={{ fontSize: "clamp(32px, 4vw, 56px)", lineHeight: 1, marginTop: 16, marginBottom: 32, position: "relative", zIndex: 2 }}>
-                Not another
-                <br />code generator.
+            {/* Left: title */}
+            <div data-reveal>
+              <span className="font-mono" style={{ fontSize: 10, letterSpacing: "0.3em", color: "var(--accent-dim)" }}>THE PIPELINE</span>
+              <h2 className="font-estrella" style={{ fontSize: "clamp(36px, 5vw, 64px)", lineHeight: 1, marginTop: 12 }}>
+                How the
+                <br /><span className="text-gradient">magic works.</span>
               </h2>
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px 32px", position: "relative", zIndex: 2 }}>
-                {[
-                  "Figma token extraction",
-                  "Mobile-first responsive",
-                  "Screenshot verification",
-                  "Color theory validation",
-                  "Animation choreography",
-                  "Accessibility checks",
-                ].map((f) => (
-                  <div key={f} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <div style={{ width: 6, height: 6, background: "var(--bg-lavender-dark)", flexShrink: 0 }} />
-                    <span style={{ fontSize: 14, color: "var(--text-secondary)" }}>{f}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Slide: Mode B */}
-            <div data-reveal className="delay-1 card-lavender span-full-tablet" style={{ gridColumn: "span 5", padding: "clamp(32px, 3vw, 48px)", minHeight: 300, display: "flex", flexDirection: "column", justifyContent: "center", position: "relative", overflow: "hidden" }}>
-              <div className="circle-deco" style={{ position: "absolute", width: 120, height: 120, background: "var(--bg-white)", bottom: -30, left: -30, opacity: 0.5 }} />
-              <span className="font-mono" style={{ fontSize: 10, letterSpacing: "0.3em", color: "var(--bg-dark)", opacity: 0.5 }}>MODE B</span>
-              <h3 className="font-estrella" style={{ fontSize: "clamp(28px, 3vw, 44px)", lineHeight: 1, marginTop: 12, marginBottom: 16, color: "var(--bg-dark)" }}>
-                No Figma?
-                <br />No problem.
-              </h3>
-              <p style={{ fontSize: 14, color: "var(--bg-dark)", opacity: 0.7, lineHeight: 1.6 }}>
-                Guided visual design with live screenshots. React to real implementations, not static mockups.
+              <p style={{ color: "var(--text-secondary)", fontSize: 15, marginTop: 20, lineHeight: 1.7, maxWidth: 400 }}>
+                Five phases, one loop. Every step is verified with real screenshots before moving forward.
               </p>
-              <div style={{ display: "flex", gap: 8, marginTop: 20, flexWrap: "wrap" }}>
-                <div style={{ padding: "6px 12px", border: "1.5px solid var(--bg-dark)", fontSize: 11, fontFamily: "'JetBrains Mono', monospace", background: "var(--bg-white)" }}>guided</div>
-                <div style={{ padding: "6px 12px", border: "1.5px solid var(--bg-dark)", fontSize: 11, fontFamily: "'JetBrains Mono', monospace", background: "var(--bg-white)" }}>interactive</div>
-                <div style={{ padding: "6px 12px", border: "1.5px solid var(--bg-dark)", fontSize: 11, fontFamily: "'JetBrains Mono', monospace", background: "var(--bg-white)" }}>visual</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Row 4: CTA */}
-          <div className="grid-bento" style={{ display: "grid", gridTemplateColumns: "repeat(12, 1fr)", gap: 16 }}>
-
-            {/* CTA dark */}
-            <div data-reveal className="card-dark span-full-tablet" style={{ gridColumn: "span 8", padding: "clamp(32px, 4vw, 56px)", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 24 }}>
-              <div>
-                <h3 className="font-estrella" style={{ fontSize: "clamp(24px, 3vw, 40px)", lineHeight: 1.1 }}>
-                  Ready to build
-                  <br />something <span style={{ color: "var(--bg-lavender)" }}>real</span>?
-                </h3>
-                <p style={{ color: "#666", fontSize: 14, marginTop: 8 }}>One command. Zero setup drama.</p>
-              </div>
-              <a href="https://github.com/ojozinho/uiux-boost" target="_blank" rel="noopener noreferrer" style={{ display: "inline-block", background: "var(--bg-lavender)", color: "var(--bg-dark)", padding: "14px 40px", fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: 13, letterSpacing: "0.12em", textTransform: "uppercase", textDecoration: "none", border: "2px solid var(--bg-lavender)", transition: "all 0.2s" }}>
-                Get the Skill
-              </a>
             </div>
 
-            {/* Quick start */}
-            <div data-reveal className="delay-1 card-brutal span-full-tablet" style={{ gridColumn: "span 4", padding: "clamp(24px, 3vw, 40px)", display: "flex", flexDirection: "column", justifyContent: "center" }}>
-              <span className="font-mono" style={{ fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.2em", marginBottom: 16 }}>QUICK START</span>
-              <div style={{ background: "var(--bg-dark)", border: "2px solid var(--border-heavy)", padding: "14px 20px" }}>
-                <span className="font-mono" style={{ fontSize: 13, color: "#F5F2ED" }}>
-                  <span style={{ color: "#8BA460" }}>$</span> /figma-faithful
-                </span>
-              </div>
+            {/* Right: steps */}
+            <div>
+              {[
+                { n: "01", label: "EXTRACT", desc: "Pull every token from Figma", color: "var(--accent)" },
+                { n: "02", label: "IMPLEMENT", desc: "Build mobile-first with your stack", color: "var(--green)" },
+                { n: "03", label: "SCREENSHOT", desc: "Capture at every viewport", color: "var(--gold)" },
+                { n: "04", label: "COMPARE", desc: "Pixel-diff against Figma source", color: "var(--accent)" },
+                { n: "05", label: "FIX & SHIP", desc: "Correct and deploy", color: "var(--green)" },
+              ].map((s, i) => (
+                <div data-reveal key={s.n} className={`delay-${i + 1}`} style={{ display: "flex", alignItems: "flex-start", gap: 20, padding: "20px 0", borderBottom: i < 4 ? "1px solid var(--border)" : "none" }}>
+                  <span className="font-mono" style={{ fontSize: 11, color: s.color, fontWeight: 700, marginTop: 2 }}>{s.n}</span>
+                  <div>
+                    <span className="font-display" style={{ fontWeight: 700, fontSize: 15, letterSpacing: "0.08em", color: s.color }}>{s.label}</span>
+                    <p className="font-mono" style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 4 }}>{s.desc}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* ═══════ FOOTER ═══════ */}
-      <footer style={{ borderTop: "2px solid var(--border-heavy)", padding: "24px clamp(20px, 4vw, 60px)", maxWidth: 1400, margin: "0 auto", width: "100%", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
-        <p className="font-mono" style={{ fontSize: 11, color: "var(--text-muted)" }}>
-          2026 UI/UX BOOST &mdash; built for humans who design
-        </p>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#8BA460", animation: "pulse-dot 2s ease-in-out infinite" }} />
-          <span className="font-mono" style={{ fontSize: 11, color: "var(--text-muted)" }}>SKILL ACTIVE</span>
+      {/* ═══ TICKER BAND ═══ */}
+      <div style={{ borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", padding: "8px 0", overflow: "hidden", background: "var(--accent)", color: "var(--bg)" }}>
+        <div style={{ display: "flex", whiteSpace: "nowrap", animation: "marquee 25s linear infinite" }}>
+          {Array.from({ length: 16 }).map((_, i) => (
+            <span key={i} className="font-mono" style={{ margin: "0 24px", fontSize: 10, fontWeight: 700, letterSpacing: "0.2em" }}>
+              EXTRACT &#9670; IMPLEMENT &#9670; SCREENSHOT &#9670; COMPARE &#9670; SHIP
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* ═══ QUOTE ═══ */}
+      <section style={{ padding: "clamp(100px, 12vw, 180px) clamp(20px, 4vw, 60px)", textAlign: "center", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 600, height: 600, background: "radial-gradient(circle, rgba(200,191,231,0.05) 0%, transparent 60%)", pointerEvents: "none" }} />
+        <div style={{ maxWidth: 900, margin: "0 auto", position: "relative", zIndex: 2 }}>
+          <blockquote data-reveal="scale" className="font-display" style={{ fontSize: "clamp(40px, 7vw, 100px)", lineHeight: 0.95, fontWeight: 800, textTransform: "uppercase" }}>
+            &ldquo;If it looks like
+            <br />AI made it,
+            <br /><span style={{ color: "var(--accent)", animation: "glow-pulse 4s ease-in-out infinite" }}>we failed.&rdquo;</span>
+          </blockquote>
+          <p data-reveal className="delay-2 font-mono" style={{ marginTop: 32, fontSize: 10, letterSpacing: "0.3em", color: "var(--text-muted)" }}>
+            THE ONLY RULE THAT MATTERS
+          </p>
+        </div>
+      </section>
+
+      {/* ═══ MORE FEATURES ═══ */}
+      <section style={{ padding: "clamp(60px, 8vw, 100px) clamp(20px, 4vw, 60px)", borderTop: "1px solid var(--border)" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+          <div className="grid-responsive" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
+
+            {[
+              { title: "Figma Extraction", desc: "Every font, color, spacing value and asset pulled automatically.", icon: "&#9635;" },
+              { title: "12+ Viewports", desc: "Stress-tested from 320px to 2560px. Fluid in between.", icon: "&#9641;" },
+              { title: "Mode B", desc: "No Figma? Guided design with live previews and real-time decisions.", icon: "&#9673;" },
+              { title: "Smart Animations", desc: "Scroll, hover, transitions — choreographed and staggered.", icon: "&#9656;" },
+            ].map((f, i) => (
+              <div data-reveal key={f.title} className={`delay-${i + 1} card`} style={{ padding: "clamp(24px, 2vw, 36px)", minWidth: 200 }}>
+                <div style={{ fontSize: 28, color: "var(--accent)", marginBottom: 16 }} dangerouslySetInnerHTML={{ __html: f.icon }} />
+                <h4 className="font-display" style={{ fontWeight: 700, fontSize: 16, marginBottom: 8 }}>{f.title}</h4>
+                <p style={{ color: "var(--text-secondary)", fontSize: 13, lineHeight: 1.6 }}>{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ INSTALL ═══ */}
+      <section id="install" style={{ padding: "clamp(80px, 10vw, 140px) clamp(20px, 4vw, 60px)", borderTop: "1px solid var(--border)" }}>
+        <div style={{ maxWidth: 700, margin: "0 auto", textAlign: "center" }}>
+
+          <span data-reveal className="font-mono" style={{ fontSize: 10, letterSpacing: "0.3em", color: "var(--accent-dim)" }}>GET STARTED</span>
+          <h2 data-reveal className="delay-1 font-estrella" style={{ fontSize: "clamp(36px, 5vw, 64px)", lineHeight: 1, marginTop: 12 }}>
+            One command.
+            <br /><span className="text-gradient">Zero drama.</span>
+          </h2>
+          <p data-reveal className="delay-2" style={{ color: "var(--text-secondary)", fontSize: 15, marginTop: 20, lineHeight: 1.7 }}>
+            Copy the skill folder to <span className="font-mono" style={{ color: "var(--text-primary)", fontSize: 13 }}>~/.claude/skills/</span> and run the command.
+          </p>
+
+          {/* Install command */}
+          <div data-reveal className="delay-3" style={{ marginTop: 40 }}>
+            <div
+              className={`copy-btn ${copied ? "copied" : ""}`}
+              onClick={copyCommand}
+              style={{ display: "inline-flex", alignItems: "center", gap: 16, background: "var(--bg-card)", border: "1px solid var(--border)", padding: "18px 32px", cursor: "pointer", position: "relative" }}
+            >
+              <span className="copied-toast font-mono">Copied!</span>
+              <span className="font-mono" style={{ fontSize: 15 }}>
+                <span style={{ color: "var(--green)" }}>$</span> /figma-faithful
+              </span>
+              <span style={{ color: "var(--text-muted)", fontSize: 12, borderLeft: "1px solid var(--border)", paddingLeft: 16 }}>
+                {copied ? "&#10003;" : "Copy"}
+              </span>
+            </div>
+          </div>
+
+          {/* Download link */}
+          <div data-reveal className="delay-4" style={{ marginTop: 24, display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
+            <a href="https://github.com/ojozinho/uiux-boost/archive/refs/heads/main.zip" style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "var(--accent)", fontSize: 14, textDecoration: "none", fontWeight: 500, transition: "opacity 0.3s" }}>
+              &#8595; Download ZIP
+            </a>
+            <a href="https://github.com/ojozinho/uiux-boost" target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "var(--text-secondary)", fontSize: 14, textDecoration: "none", transition: "opacity 0.3s" }}>
+              View on GitHub &#8599;
+            </a>
+          </div>
+
+          {/* Quick install steps */}
+          <div data-reveal className="delay-5" style={{ marginTop: 48, textAlign: "left", maxWidth: 500, margin: "48px auto 0" }}>
+            <div className="font-mono" style={{ fontSize: 12, lineHeight: 2.2, color: "var(--text-secondary)", background: "var(--bg-card)", border: "1px solid var(--border)", padding: "24px 28px" }}>
+              <div style={{ color: "var(--text-muted)", marginBottom: 8 }}># clone the skill</div>
+              <div><span style={{ color: "var(--green)" }}>$</span> git clone https://github.com/ojozinho/uiux-boost</div>
+              <div><span style={{ color: "var(--green)" }}>$</span> cp -r uiux-boost/skills/figma-faithful ~/.claude/skills/</div>
+              <div style={{ color: "var(--text-muted)", marginTop: 8 }}># open claude code and run</div>
+              <div><span style={{ color: "var(--green)" }}>$</span> /figma-faithful</div>
+              <div style={{ color: "var(--accent)", marginTop: 8 }}>&#9670; UI/UX BOOST activated</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ FOOTER ═══ */}
+      <footer style={{ borderTop: "1px solid var(--border)", padding: "24px clamp(20px, 4vw, 60px)" }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
+          <p className="font-mono" style={{ fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.05em" }}>
+            2026 UI/UX BOOST &mdash; built for humans who design
+          </p>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <div style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--green)", animation: "pulse-glow 2s ease-in-out infinite" }} />
+            <span className="font-mono" style={{ fontSize: 10, color: "var(--text-muted)" }}>SKILL ACTIVE</span>
+          </div>
         </div>
       </footer>
     </div>
