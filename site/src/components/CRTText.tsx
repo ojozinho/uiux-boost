@@ -21,48 +21,34 @@ export function CRTText() {
         overflow: "hidden",
       }}
     >
-      {/* CRT scanlines */}
+      {/* Dark organic texture */}
       <div
         style={{
           position: "absolute",
-          inset: 0,
-          zIndex: 3,
-          background:
-            "repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0,0,0,0.15) 1px, rgba(0,0,0,0.15) 2px)",
-          pointerEvents: "none",
+          inset: "-20%",
+          backgroundImage: "url(/bg-texture.png)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          opacity: 0.18,
+          filter: "grayscale(1) contrast(1.3) brightness(0.7)",
+          mixBlendMode: "screen",
+          transform: `scale(1.1) translateY(${-scrollY * 0.08}px)`,
+          transition: "transform 0.1s linear",
         }}
       />
 
-      {/* Single massive word — like the SUPERSTAR TV reference */}
+      {/* Scanlines */}
       <div
         style={{
           position: "absolute",
           inset: 0,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          zIndex: 1,
-          transform: `translateY(${-scrollY * 0.15}px)`,
+          zIndex: 2,
+          background:
+            "repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0,0,0,0.12) 1px, rgba(0,0,0,0.12) 2px)",
+          pointerEvents: "none",
         }}
-      >
-        <div
-          className="font-display"
-          style={{
-            fontSize: "clamp(120px, 28vw, 450px)",
-            fontWeight: 900,
-            letterSpacing: "-0.05em",
-            textTransform: "uppercase",
-            color: "rgba(255,255,255,0.04)",
-            whiteSpace: "nowrap",
-            lineHeight: 0.85,
-            textAlign: "center",
-          }}
-        >
-          UI/UX
-          <br />
-          BOOST
-        </div>
-      </div>
+      />
 
       {/* VHS tracking bar */}
       <div
@@ -71,9 +57,9 @@ export function CRTText() {
           left: 0,
           right: 0,
           height: 40,
-          background: "linear-gradient(180deg, transparent, rgba(255,255,255,0.02), transparent)",
-          zIndex: 4,
-          animation: "vhs-track 8s linear infinite",
+          background: "linear-gradient(180deg, transparent, rgba(255,255,255,0.015), transparent)",
+          zIndex: 3,
+          animation: "vhs-track 10s linear infinite",
         }}
       />
     </div>
