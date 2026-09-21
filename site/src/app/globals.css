@@ -12,20 +12,20 @@
 :root {
   --bg: #050505;
   --bg-elevated: #0C0C0C;
-  --bg-card: #111111;
-  --bg-card-hover: #1A1A1A;
-  --surface: #161616;
-  --text-primary: #E8E4DF;
-  --text-secondary: #8A8580;
-  --text-muted: #4A4540;
-  --accent: #C8BFE7;
-  --accent-bright: #DDD5F5;
-  --accent-dim: #6B5FA0;
-  --red: #E8453C;
-  --green: #5AE85A;
-  --gold: #D4A843;
-  --border: #1E1E1E;
-  --border-accent: #2A2A2A;
+  --bg-card: #0E0E0E;
+  --bg-card-hover: #161616;
+  --surface: #121212;
+  --text-primary: #E0E0E0;
+  --text-secondary: #777;
+  --text-muted: #444;
+  --accent: #B0B0B0;
+  --accent-bright: #D0D0D0;
+  --accent-dim: #555;
+  --red: #999;
+  --green: #999;
+  --gold: #888;
+  --border: #1A1A1A;
+  --border-accent: #222;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -89,8 +89,8 @@ a, button, [role="button"], .copy-btn { cursor: none; }
 }
 
 @keyframes pulse-glow {
-  0%, 100% { opacity: 1; box-shadow: 0 0 4px var(--green); }
-  50% { opacity: 0.5; box-shadow: 0 0 12px var(--green); }
+  0%, 100% { opacity: 1; box-shadow: 0 0 4px rgba(255,255,255,0.3); }
+  50% { opacity: 0.5; box-shadow: 0 0 12px rgba(255,255,255,0.5); }
 }
 
 @keyframes fade-in-up {
@@ -114,8 +114,8 @@ a, button, [role="button"], .copy-btn { cursor: none; }
 }
 
 @keyframes glow-pulse {
-  0%, 100% { text-shadow: 0 0 20px rgba(200, 191, 231, 0.3); }
-  50% { text-shadow: 0 0 40px rgba(200, 191, 231, 0.6), 0 0 80px rgba(200, 191, 231, 0.2); }
+  0%, 100% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.15); }
+  50% { text-shadow: 0 0 40px rgba(255, 255, 255, 0.3), 0 0 80px rgba(255, 255, 255, 0.1); }
 }
 
 /* ── SCROLL REVEAL ── */
@@ -151,14 +151,14 @@ a, button, [role="button"], .copy-btn { cursor: none; }
 .font-body { font-family: 'Space Grotesk', sans-serif; }
 
 .text-gradient {
-  background: linear-gradient(135deg, var(--accent-bright) 0%, var(--accent) 50%, var(--accent-dim) 100%);
+  background: linear-gradient(180deg, #fff 0%, #aaa 50%, #fff 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .text-chrome {
-  background: linear-gradient(180deg, #fff 0%, #999 40%, #fff 50%, #666 60%, #ddd 100%);
+  background: linear-gradient(180deg, #fff 0%, #888 40%, #fff 50%, #555 60%, #ccc 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -182,7 +182,7 @@ a, button, [role="button"], .copy-btn { cursor: none; }
   background: var(--bg-card-hover);
   border-color: var(--accent-dim);
   transform: translateY(-4px);
-  box-shadow: 0 8px 32px rgba(200, 191, 231, 0.06);
+  box-shadow: 0 8px 32px rgba(255, 255, 255, 0.06);
 }
 
 /* ── HORIZONTAL SCROLL ── */

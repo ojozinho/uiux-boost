@@ -34,7 +34,7 @@ export function CustomCursor() {
       ring.style.height = "56px";
       ring.style.marginLeft = "-8px";
       ring.style.marginTop = "-8px";
-      ring.style.borderColor = "var(--accent)";
+      ring.style.borderColor = "rgba(255,255,255,0.6)";
       dot.style.opacity = "0";
     };
     const onLeaveLink = () => {
@@ -42,7 +42,7 @@ export function CustomCursor() {
       ring.style.height = "40px";
       ring.style.marginLeft = "0";
       ring.style.marginTop = "0";
-      ring.style.borderColor = "rgba(200,191,231,0.4)";
+      ring.style.borderColor = "rgba(255,255,255,0.3)";
       dot.style.opacity = "1";
     };
 
@@ -96,7 +96,7 @@ export function CustomCursor() {
           left: 0,
           width: 40,
           height: 40,
-          border: "1px solid rgba(200,191,231,0.4)",
+          border: "1px solid rgba(255,255,255,0.3)",
           borderRadius: "50%",
           pointerEvents: "none",
           zIndex: 10000,

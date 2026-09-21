@@ -69,7 +69,7 @@ export default function Home() {
       <section ref={heroRef} style={{ minHeight: "100vh", display: "flex", flexDirection: "column", position: "relative", overflow: "hidden" }}>
 
         {/* Radial glow — follows mouse */}
-        <div style={{ position: "absolute", top: "30%", left: "50%", transform: `translate(calc(-50% + ${mousePos.x * 2}px), calc(-50% + ${mousePos.y * 2}px))`, width: 700, height: 700, background: "radial-gradient(circle, rgba(200,191,231,0.07) 0%, transparent 60%)", zIndex: 0, pointerEvents: "none", transition: "transform 0.3s ease-out" }} />
+        <div style={{ position: "absolute", top: "30%", left: "50%", transform: `translate(calc(-50% + ${mousePos.x * 2}px), calc(-50% + ${mousePos.y * 2}px))`, width: 700, height: 700, background: "radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 60%)", zIndex: 0, pointerEvents: "none", transition: "transform 0.3s ease-out" }} />
 
         {/* Nav */}
         <nav style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "24px clamp(20px, 4vw, 60px)", position: "relative", zIndex: 10 }}>
@@ -133,7 +133,7 @@ export default function Home() {
       {/* ═══ GIANT TYPOGRAPHY SECTION — Opium style ═══ */}
       <section style={{ padding: "clamp(60px, 8vw, 100px) 0", overflow: "hidden", position: "relative" }}>
         {/* Radial glow behind */}
-        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 800, height: 400, background: "radial-gradient(ellipse, rgba(200,191,231,0.06) 0%, transparent 70%)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 800, height: 400, background: "radial-gradient(ellipse, rgba(255,255,255,0.03) 0%, transparent 70%)", pointerEvents: "none" }} />
 
         {/* Full-width stretched text lines */}
         <div data-reveal style={{ textAlign: "center", position: "relative", zIndex: 2 }}>
@@ -295,7 +295,7 @@ export default function Home() {
 
       {/* ═══ QUOTE ═══ */}
       <section style={{ padding: "clamp(100px, 12vw, 180px) clamp(20px, 4vw, 60px)", textAlign: "center", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 600, height: 600, background: "radial-gradient(circle, rgba(200,191,231,0.05) 0%, transparent 60%)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: 600, height: 600, background: "radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 60%)", pointerEvents: "none" }} />
         <div style={{ maxWidth: 900, margin: "0 auto", position: "relative", zIndex: 2 }}>
           <blockquote data-reveal="scale" className="font-display" style={{ fontSize: "clamp(40px, 7vw, 100px)", lineHeight: 0.95, fontWeight: 800, textTransform: "uppercase" }}>
             &ldquo;If it looks like
