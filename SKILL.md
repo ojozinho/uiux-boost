@@ -214,10 +214,18 @@ Before requesting a screenshot from the user, run this checklist on your own cod
 - [ ] No section looks like it could come from a different website
 - [ ] Grid breaks at least once — a full-width element, an overlap, a bleed
 
+**Animation check:**
+- [ ] Section container has `data-reveal` attribute
+- [ ] Card/item groups use `data-reveal-stagger` for sequential entrance
+- [ ] Every button and link has a visible hover state (not just color change — transform, underline animation, or opacity shift)
+- [ ] Image/card hover has subtle scale or reveal effect
+- [ ] No two adjacent elements share the exact same animation timing
+
 **"Would a designer approve?" test:**
 - Open the code in your mind. Imagine a senior designer reviewing it.
 - If they'd say "this looks like a template" — rewrite it.
 - If they'd say "I've seen this layout on 50 AI sites" — rewrite it.
+- If they'd say "why is nothing animated?" — add scroll reveals and hover states.
 - The bar is: would this get featured on a design inspiration site?
 
 ---
@@ -444,6 +452,84 @@ If you build the nav + hero + work section all at once, you've broken the workfl
 2. Font loading (Google Fonts or local — exact match from design)
 3. Minimal reset + box-sizing
 4. Responsive wrapper (max-width matching Figma desktop artboard)
+5. **Base animation system** (MANDATORY — set up BEFORE building any section):
+
+```css
+/* Scroll reveal — every section gets this */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+[data-reveal].visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger children inside a revealed container */
+[data-reveal-stagger] > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+[data-reveal-stagger].visible > *:nth-child(1) { transition-delay: 0s; }
+[data-reveal-stagger].visible > *:nth-child(2) { transition-delay: 0.08s; }
+[data-reveal-stagger].visible > *:nth-child(3) { transition-delay: 0.16s; }
+[data-reveal-stagger].visible > *:nth-child(4) { transition-delay: 0.24s; }
+[data-reveal-stagger].visible > *:nth-child(5) { transition-delay: 0.32s; }
+[data-reveal-stagger].visible > *:nth-child(6) { transition-delay: 0.4s; }
+[data-reveal-stagger].visible > * { opacity: 1; transform: translateY(0); }
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal], [data-reveal-stagger] > * {
+    opacity: 1; transform: none; transition: none;
+  }
+}
+```
+
+Also set up the IntersectionObserver immediately — a small utility hook or script:
+
+```js
+// Run once on mount — observes all [data-reveal] and [data-reveal-stagger]
+const observer = new IntersectionObserver(
+  (entries) => entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  }),
+  { threshold: 0.15 }
+);
+document.querySelectorAll('[data-reveal],[data-reveal-stagger]')
+  .forEach(el => observer.observe(el));
+```
+
+6. **Base hover states** (MANDATORY — define these globally):
+
+```css
+/* Buttons — lift + subtle shadow */
+button, a[role="button"], .btn {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+button:hover, a[role="button"]:hover, .btn:hover {
+  transform: translateY(-2px);
+}
+
+/* Links — underline animation or color shift */
+a { transition: color 0.3s ease, opacity 0.3s ease; }
+
+/* Cards/images — subtle scale on hover */
+.hover-lift {
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hover-lift:hover { transform: scale(1.03); }
+```
+
+**A site with zero animations looks unfinished.** Every section you build MUST have `data-reveal` on its container. Every card/image group MUST use `data-reveal-stagger`. Every interactive element MUST have a hover state. This is not Phase 4 polish — this is baseline quality.
 
 ```
 // tip: define ALL your design tokens as CSS variables first
@@ -534,34 +620,41 @@ No layout should break at ANY width. Check for:
 
 ---
 
-## Phase 4 — Animation & Polish
+## Phase 4 — Advanced Polish
 
-### 4.1 Check Design for Motion
+By this point, scroll reveals, staggered children, and hover states are already in from Phase 2. This phase adds the extra layer that makes a site feel premium.
 
-Look for Figma prototype interactions, Smart Animate, or motion annotations.
+### 4.1 Ask What Level of Polish
 
-### 4.2 Propose Animations
-
-If none found, ask via `AskUserQuestion`:
+Use `AskUserQuestion`:
 
 Options:
-1. **Scroll reveals** — elements slide/fade in as you scroll down
-2. **Hover interactions** — buttons transform, cards lift, links animate
-3. **Micro-interactions** — input focus effects, toggle animations, ripples
-4. **Full choreography** — all of the above, orchestrated with staggered timing
-5. **None** — keep it static and clean
+1. **Subtle** — smooth scroll, cursor effects, parallax on hero image
+2. **Detailed** — above + page transitions, text split animations, magnetic buttons
+3. **Full production** — above + custom cursor, loading screen, scroll-triggered video/image sequences
+4. **Done** — the base animations are enough, ship it
 
-### 4.3 Implementation Rules
+### 4.2 Polish Techniques (pick what fits)
 
-- CSS transitions/animations first, JS only if needed
-- `IntersectionObserver` for scroll triggers
-- Only animate `transform` and `opacity` (GPU-composited)
-- `prefers-reduced-motion: reduce` → disable all motion
-- Stagger timing for groups (50-100ms delay between items)
-- Different easing for enter vs exit
+- **Parallax**: images/backgrounds move at different scroll speeds (`transform: translateY(calc(var(--scroll) * 0.3))`)
+- **Text split animations**: headlines reveal word-by-word or char-by-char on scroll
+- **Magnetic buttons**: button follows cursor slightly within its bounds
+- **Smooth scroll momentum**: use `lenis` or CSS `scroll-behavior: smooth` with custom easing
+- **Image reveal**: images slide in from behind a color block (wipe effect)
+- **Counter/number animations**: stats count up when scrolled into view
+- **Cursor trail or custom cursor**: dot + ring, changes on interactive elements
+
+### 4.3 Rules
+
+- Only animate `transform` and `opacity` (GPU-composited) — never animate `width`, `height`, `top`, `left`
+- Every animation needs a DIFFERENT timing from its neighbors — no two adjacent elements should move identically
+- `prefers-reduced-motion: reduce` → disable ALL motion, always
+- JS animations: use `requestAnimationFrame`, never `setInterval`
+- Test at 60fps — if an animation drops frames, simplify it
 
 ```
 // tip: cubic-bezier(0.16, 1, 0.3, 1) — the smooth-out easing that feels premium
+// tip: cubic-bezier(0.76, 0, 0.24, 1) — sharp ease-in-out for dramatic reveals
 ```
 
 ---
