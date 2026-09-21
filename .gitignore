@@ -1,1 +1,4 @@
 token github.txt
+
+.vercel
+.env*

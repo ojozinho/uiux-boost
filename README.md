@@ -1,104 +1,47 @@
-```
-██╗   ██╗██╗   ██╗██╗  ██╗██╗  ██╗
-██║   ██║██║   ██║╚██╗██╔╝╚██╗██╔╝
-██║   ██║██║   ██║ ╚███╔╝  ╚███╔╝
-██║   ██║██║   ██║ ██╔██╗  ██╔██╗
-╚██████╔╝██║██╗██║██╔╝ ██╗██╔╝ ██╗
- ╚═════╝ ╚═╝╚═╝╚═╝╚═╝  ╚═╝╚═╝  ╚═╝
-          B O O S T
-```
-
 # UI/UX BOOST
 
-**Pixel-perfect. Fully responsive. Zero AI slop.**
+Claude Code skill that turns Figma designs into production sites — pixel-perfect, responsive, no AI-looking output.
 
-A Claude Code skill that turns Figma designs into production websites that actually look like the design — not "kinda close" — identical. Or, if you don't have a Figma file, it guides you through building one from scratch with live visual feedback.
-
----
-
-## What makes this different
-
-| Traditional | UI/UX BOOST |
-|---|---|
-| Code it, hope it looks right | Code it, screenshot it, compare it, fix it |
-| "Looks close enough" | Pixel-perfect at design width, fluid between |
-| Generic AI output | Anti-slop rules ban 40+ AI design patterns |
-| One resolution | Responsive from 320px to 1920px+ |
-| "Add animations later" | Animations proposed and implemented as part of the flow |
+No Figma? It walks you through building a design from scratch with live screenshots at every step.
 
 ## How it works
 
-```
-FIGMA DESIGN ──→ EXTRACT ──→ IMPLEMENT ──→ SCREENSHOT ──→ COMPARE
-                                  ↑                          │
-                                  └────── FIX ◄──────────────┘
-```
+Give it a Figma link. It extracts fonts, colors, spacing, assets. Builds mobile-first, section by section. Takes screenshots at each breakpoint. Compares against the original. Fixes what doesn't match. Repeats until it's right.
 
-1. **Extract** — Pulls every detail from your Figma: fonts, colors, spacing, layout, assets
-2. **Implement** — Builds mobile-first, section by section
-3. **Screenshot** — Takes browser screenshots at multiple viewports
-4. **Compare** — Visually compares against the Figma design
-5. **Fix** — Corrects any discrepancies
-6. **Repeat** — Until every section is faithful
+Without Figma, it asks what you're building, proposes 2-3 visual directions, and implements the one you pick — checking each section with you via screenshots before moving on.
 
-## No Figma? No problem.
+## Anti-slop
 
-Mode B guides you through design decisions with live implementations:
-- Describe your project and vibe
-- Get 2-3 aesthetic directions described vividly
-- Pick one, then approve each section via screenshots
-- End up with a complete, intentional design
+Every build runs through 40+ checks that catch common AI design patterns: default fonts (Inter, Roboto), purple gradients, identical card grids, emoji as icons, uniform border-radius, generic copy. If it looks like AI made it, the skill flags it.
 
-## Anti-AI Slop
+Full list in [references/ai-slop-patterns.md](references/ai-slop-patterns.md).
 
-This skill actively bans patterns that make sites look AI-generated:
+## Setup
 
-- **Typography**: No Inter, Roboto, Open Sans defaults
-- **Colors**: No purple-to-cyan gradients
-- **Layout**: No three identical cards in a row
-- **Components**: No emoji icons, no uniform border-radius
-- **Animation**: No identical fade-in on everything
-- **Copy**: No "Build the future of [anything]"
-
-Full pattern reference in [`references/ai-slop-patterns.md`](references/ai-slop-patterns.md)
-
-## Requirements
-
-- [Claude Code](https://claude.com/claude-code) with skill support
-- Figma MCP plugin (for Mode A — design-to-code)
+- [Claude Code](https://claude.com/claude-code)
+- Figma MCP plugin (if using Figma designs)
 - Chrome DevTools MCP (for screenshot comparison)
-- Node.js 18+ (for dev server)
+- Node.js 18+
 
-## Quick Start
+## Usage
 
-```bash
-# In Claude Code, just say:
+```
 /figma-faithful
-
-# Or naturally:
-"implement this Figma design pixel-perfect"
-"build me a landing page, no Figma"
-"converter esse design do Figma"
 ```
 
-## Stack Support
+Or just describe what you want — the skill triggers on phrases like "implement this Figma", "build me a site", "converter esse design".
 
-- Next.js + Tailwind CSS
-- Vite + React + Tailwind CSS
-- Astro + Tailwind CSS
-- Plain HTML + CSS
+## Stacks
 
-## File Structure
+Next.js, Vite + React, Astro, plain HTML. All with Tailwind CSS.
+
+## Files
 
 ```
-figma-faithful/
-├── SKILL.md                          # Main skill instructions
-└── references/
-    ├── visual-checklist.md           # Screenshot comparison checklist
-    ├── ai-slop-patterns.md           # Anti-AI pattern reference
-    └── setup-guide.md                # Integration setup docs
+SKILL.md              — skill instructions
+references/
+  visual-checklist.md — screenshot comparison checklist
+  ai-slop-patterns.md — banned AI patterns
+  setup-guide.md      — integration setup
+site/                 — landing page (uiuxboost.vercel.app)
 ```
-
----
-
-**Built for humans who design. Powered by Claude who codes.**
