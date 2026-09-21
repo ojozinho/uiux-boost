@@ -6,11 +6,20 @@ import dynamic from "next/dynamic";
 const ModelViewer = dynamic(() => import("@/components/ModelViewer").then((m) => m.ModelViewer), { ssr: false });
 const CustomCursor = dynamic(() => import("@/components/CustomCursor").then((m) => m.CustomCursor), { ssr: false });
 
+function useIsTouchDevice() {
+  const [isTouch, setIsTouch] = useState(false);
+  useEffect(() => {
+    setIsTouch(window.matchMedia("(hover: none)").matches || "ontouchstart" in window);
+  }, []);
+  return isTouch;
+}
+
 export default function Home() {
   const [copied, setCopied] = useState(false);
   const [headerVisible, setHeaderVisible] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const heroRef = useRef<HTMLDivElement>(null);
+  const isTouch = useIsTouchDevice();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -43,7 +52,7 @@ export default function Home() {
 
   return (
     <div className="grain" style={{ minHeight: "100vh" }}>
-      <CustomCursor />
+      {!isTouch && <CustomCursor />}
       <ModelViewer />
 
       {/* ═══ STICKY HEADER ═══ */}
@@ -183,7 +192,7 @@ export default function Home() {
           <div className="scroll-x grid-responsive" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16 }}>
 
             {/* Card: Terminal */}
-            <div data-reveal className="card" style={{ padding: "clamp(24px, 3vw, 40px)", minHeight: 360, display: "flex", flexDirection: "column", minWidth: 300 }}>
+            <div data-reveal className="card" style={{ padding: "clamp(24px, 3vw, 40px)", minHeight: 360, display: "flex", flexDirection: "column" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 24 }}>
                 <div style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--red)" }} />
                 <div style={{ width: 8, height: 8, borderRadius: "50%", background: "var(--gold)" }} />
@@ -204,7 +213,7 @@ export default function Home() {
             </div>
 
             {/* Card: Screenshot Loop */}
-            <div data-reveal className="delay-1 card" style={{ padding: "clamp(24px, 3vw, 40px)", minHeight: 360, display: "flex", flexDirection: "column", justifyContent: "space-between", minWidth: 300 }}>
+            <div data-reveal className="delay-1 card" style={{ padding: "clamp(24px, 3vw, 40px)", minHeight: 360, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
               <div>
                 <span className="font-mono" style={{ fontSize: 10, letterSpacing: "0.2em", color: "var(--accent-dim)" }}>SCREENSHOT LOOP</span>
                 <h3 className="font-display" style={{ fontWeight: 700, fontSize: 22, marginTop: 12 }}>Build. Capture. Compare.</h3>
@@ -227,7 +236,7 @@ export default function Home() {
             </div>
 
             {/* Card: Anti-slop */}
-            <div data-reveal className="delay-2 card" style={{ padding: "clamp(24px, 3vw, 40px)", minHeight: 360, display: "flex", flexDirection: "column", minWidth: 300 }}>
+            <div data-reveal className="delay-2 card" style={{ padding: "clamp(24px, 3vw, 40px)", minHeight: 360, display: "flex", flexDirection: "column" }}>
               <span className="font-mono" style={{ fontSize: 10, letterSpacing: "0.2em", color: "var(--red)" }}>ANTI-SLOP ENGINE</span>
               <h3 className="font-display" style={{ fontWeight: 700, fontSize: 22, marginTop: 12 }}>40+ AI patterns banned.</h3>
               <div style={{ marginTop: 20, display: "flex", flexDirection: "column", gap: 6, flex: 1 }}>
@@ -311,7 +320,7 @@ export default function Home() {
       {/* ═══ MORE FEATURES ═══ */}
       <section style={{ padding: "clamp(60px, 8vw, 100px) clamp(20px, 4vw, 60px)", borderTop: "1px solid var(--border)" }}>
         <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <div className="grid-responsive" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16 }}>
+          <div className="grid-responsive" style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16 }}>
 
             {[
               { title: "Figma Extraction", desc: "Every font, color, spacing value and asset pulled automatically.", icon: "&#9635;" },
@@ -319,7 +328,7 @@ export default function Home() {
               { title: "Mode B", desc: "No Figma? Guided design with live previews and real-time decisions.", icon: "&#9673;" },
               { title: "Smart Animations", desc: "Scroll, hover, transitions — choreographed and staggered.", icon: "&#9656;" },
             ].map((f, i) => (
-              <div data-reveal key={f.title} className={`delay-${i + 1} card`} style={{ padding: "clamp(24px, 2vw, 36px)", minWidth: 200 }}>
+              <div data-reveal key={f.title} className={`delay-${i + 1} card`} style={{ padding: "clamp(24px, 2vw, 36px)" }}>
                 <div style={{ fontSize: 28, color: "var(--accent)", marginBottom: 16 }} dangerouslySetInnerHTML={{ __html: f.icon }} />
                 <h4 className="font-display" style={{ fontWeight: 700, fontSize: 16, marginBottom: 8 }}>{f.title}</h4>
                 <p style={{ color: "var(--text-secondary)", fontSize: 13, lineHeight: 1.6 }}>{f.desc}</p>
@@ -347,7 +356,7 @@ export default function Home() {
             <div
               className={`copy-btn ${copied ? "copied" : ""}`}
               onClick={copyCommand}
-              style={{ display: "inline-flex", alignItems: "center", gap: 16, background: "var(--bg-card)", border: "1px solid var(--border)", padding: "18px 32px", cursor: "pointer", position: "relative" }}
+              style={{ display: "inline-flex", alignItems: "center", gap: 12, background: "var(--bg-card)", border: "1px solid var(--border)", padding: "14px clamp(16px, 4vw, 32px)", cursor: "pointer", position: "relative", maxWidth: "100%" }}
             >
               <span className="copied-toast font-mono">Copied!</span>
               <span className="font-mono" style={{ fontSize: 15 }}>
@@ -371,7 +380,7 @@ export default function Home() {
 
           {/* Quick install steps */}
           <div data-reveal className="delay-5" style={{ marginTop: 48, textAlign: "left", maxWidth: 500, margin: "48px auto 0" }}>
-            <div className="font-mono" style={{ fontSize: 12, lineHeight: 2.2, color: "var(--text-secondary)", background: "var(--bg-card)", border: "1px solid var(--border)", padding: "24px 28px" }}>
+            <div className="font-mono" style={{ fontSize: "clamp(10px, 2.5vw, 12px)", lineHeight: 2.2, color: "var(--text-secondary)", background: "var(--bg-card)", border: "1px solid var(--border)", padding: "clamp(16px, 3vw, 24px) clamp(16px, 3vw, 28px)", overflowX: "auto", wordBreak: "break-all" }}>
               <div style={{ color: "var(--text-muted)", marginBottom: 8 }}># clone the skill</div>
               <div><span style={{ color: "var(--green)" }}>$</span> git clone https://github.com/ojozinho/uiux-boost</div>
               <div><span style={{ color: "var(--green)" }}>$</span> cp -r uiux-boost/skills/figma-faithful ~/.claude/skills/</div>

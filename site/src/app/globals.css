@@ -233,9 +233,22 @@ a, button, [role="button"], .copy-btn { cursor: none; }
 @media (max-width: 768px) {
   .grid-responsive {
     grid-template-columns: 1fr !important;
+    display: flex !important;
+    flex-direction: column !important;
   }
   .grid-responsive > * {
     grid-column: span 1 !important;
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+  .scroll-x {
+    overflow-x: visible !important;
+    flex-wrap: wrap !important;
   }
   .hide-mobile { display: none !important; }
+}
+
+@media (hover: none), (pointer: coarse) {
+  body { cursor: auto !important; }
+  a, button, [role="button"], .copy-btn { cursor: auto !important; }
 }
