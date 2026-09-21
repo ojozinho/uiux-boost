@@ -20,7 +20,6 @@ Full list in [references/ai-slop-patterns.md](references/ai-slop-patterns.md).
 
 - [Claude Code](https://claude.com/claude-code)
 - Figma MCP plugin (if using Figma designs)
-- Chrome DevTools MCP (for screenshot comparison)
 - Node.js 18+
 
 ## Usage

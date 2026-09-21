@@ -97,7 +97,6 @@ After generating any code, scan for these tells. If 3+ are present, you've produ
 
 This skill uses:
 - **Figma plugin** (optional — see Mode B for no-Figma workflow)
-- **Chrome DevTools MCP** (for screenshots and viewport testing)
 - A dev server the browser can reach
 
 On activation, check which are available and adapt the workflow.
@@ -128,7 +127,6 @@ The user has NO design file. Guide them through design decisions visually:
 
 Check silently (no need to ask the user):
 - Is Figma MCP connected? (try listing Figma tools)
-- Is Chrome DevTools MCP connected?
 - Is there a project already or starting fresh?
 
 Report what's available and what's missing. For missing items, guide setup:
@@ -151,7 +149,7 @@ Then bootstrap:
 - Create project with chosen stack
 - Set up CSS custom properties skeleton
 - Start dev server in background
-- Open browser via Chrome DevTools
+- Tell the user to open `localhost` in their browser
 
 ### 0.3 Vercel Connection (if token available)
 
@@ -245,8 +243,8 @@ Let the user pick. Then build out the design system (colors, fonts, spacing) bas
 For each section:
 1. Describe what you're going to build
 2. Implement it
-3. Screenshot it via Chrome DevTools
-4. Show the screenshot to the user
+3. Ask the user to check the browser and paste a screenshot (Alt+V)
+4. Compare against the intent
 5. Get approval or iterate
 
 This way the user "designs" by reacting to real implementations.
@@ -302,12 +300,12 @@ IMPLEMENT → SCREENSHOT → COMPARE → FIX → NEXT
 
 ### 3.1 Screenshot Protocol
 
-Use Chrome DevTools MCP:
+Ask the user to screenshot the browser at each width and paste it (Alt+V in Claude Code). You can read pasted images directly.
 
-1. `navigate_page` to dev server URL
-2. `resize_page` to target width
-3. `take_screenshot`
-4. Read the screenshot image to inspect visually
+```
+// tip: Alt+V pastes images here — screenshot your browser and drop it in
+// tip: use DevTools device toolbar (Ctrl+Shift+M) to resize to exact widths
+```
 
 Widths to check:
 - Mobile Figma width (usually 375px)
@@ -380,7 +378,7 @@ Options:
 
 ### 5.1 Full-Page Comparison
 
-Side-by-side screenshots:
+Ask the user to paste full-page screenshots:
 - Desktop full page vs Figma desktop
 - Mobile full page vs Figma mobile
 - List any remaining delta
@@ -456,8 +454,7 @@ The agent applies these rules at ALL times — during implementation, review, an
 
 ## Error Handling
 
-- **Chrome DevTools not connected**: guide connection, fall back to user verification
 - **Figma token expired**: walk through refresh
 - **Dev server crash**: restart from last checkpoint
 - **Font not on Google Fonts**: suggest closest match, note the substitution
-- **Screenshot fails**: describe what you expect to see, ask user to verify manually
+- **User can't paste screenshot**: describe what to check, ask them to verify manually

@@ -12,15 +12,7 @@ Quick reference for setting up all integrations.
 6. Copy the token immediately (you can't see it again)
 7. The Figma MCP plugin in Claude Code will use this token
 
-## 2. Chrome DevTools MCP
-
-Required for the screenshot comparison loop.
-
-- Should already be installed as a Claude Code plugin
-- Make sure Chrome/Chromium is running with remote debugging enabled
-- The plugin connects automatically when Chrome is open
-
-## 3. Vercel (Optional)
+## 2. Vercel (Optional)
 
 For automatic preview deploys:
 
@@ -28,7 +20,7 @@ For automatic preview deploys:
 2. Save it in your project's env or pass it when asked
 3. The skill can link your project to Vercel for continuous deployment
 
-## 4. Project Stack Options
+## 3. Project Stack Options
 
 | Stack | Best for | Command |
 |-------|----------|---------|
@@ -37,7 +29,7 @@ For automatic preview deploys:
 | Astro + Tailwind | Static sites, landing pages, content | `npm create astro@latest` |
 | HTML + CSS | Simple pages, no framework needed | Manual setup |
 
-## 5. Useful Shortcuts
+## 4. Useful Shortcuts
 
 | Shortcut | What it does |
 |----------|-------------|
@@ -47,7 +39,7 @@ For automatic preview deploys:
 | Right-click in Figma > Copy as CSS | Get raw CSS values |
 | `F` in Figma | Frame tool for creating artboards |
 
-## 6. Getting Good Figma URLs
+## 5. Getting Good Figma URLs
 
 The skill needs frame-specific URLs (with `node-id`):
 
