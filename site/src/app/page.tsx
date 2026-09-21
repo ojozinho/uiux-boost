@@ -244,7 +244,7 @@ export default function Home() {
           <div style={{ display: "flex", gap: "clamp(12px, 3vw, 20px)", alignItems: "center" }}>
             <LangSwitch size={10} />
             <span className="font-mono hide-mobile" style={{ fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.1em" }}>2026</span>
-            <a href="https://github.com/ojozinho/uiux-boost" target="_blank" rel="noopener noreferrer" className="font-mono" style={{ fontSize: 10, color: "var(--text-secondary)", textDecoration: "none" }}>GITHUB &#8599;</a>
+            <a href="https://github.com/ojozinho/uiux-boost" target="_blank" rel="noopener noreferrer" className="font-mono" style={{ fontSize: 10, color: "var(--text-secondary)", textDecoration: "none" }}>GITHUB <span style={{ display: "inline-block", width: 8, height: 8, borderRight: "1.5px solid currentColor", borderTop: "1.5px solid currentColor", transform: "rotate(-0deg) translateY(1px)" }} /></a>
           </div>
         </nav>
 
@@ -266,10 +266,10 @@ export default function Home() {
 
             <div data-reveal className="delay-3" style={{ display: "flex", gap: "clamp(8px, 2vw, 16px)", justifyContent: "center", marginTop: "clamp(24px, 4vw, 40px)", flexWrap: "wrap" }}>
               <a href="#install" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "var(--accent)", color: "var(--bg)", padding: "12px clamp(20px, 4vw, 32px)", fontWeight: 600, fontSize: "clamp(12px, 1.5vw, 14px)", letterSpacing: "0.05em", textDecoration: "none", border: "none", transition: "all 0.3s" }}>
-                {s.cta} <span style={{ fontSize: 16 }}>&#8595;</span>
+                {s.cta} <span style={{ display: "inline-block", width: 10, height: 10, borderRight: "2px solid currentColor", borderBottom: "2px solid currentColor", transform: "rotate(45deg)", marginLeft: 2, marginBottom: 2 }} />
               </a>
               <a href="https://github.com/ojozinho/uiux-boost" target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "transparent", color: "var(--text-primary)", padding: "12px clamp(20px, 4vw, 32px)", fontWeight: 500, fontSize: "clamp(12px, 1.5vw, 14px)", letterSpacing: "0.05em", textDecoration: "none", border: "1px solid var(--border-accent)", transition: "all 0.3s" }}>
-                {s.source} &#8599;
+                {s.source} <span style={{ display: "inline-block", width: 8, height: 8, borderRight: "1.5px solid currentColor", borderTop: "1.5px solid currentColor", transform: "rotate(45deg)", marginLeft: 2 }} />
               </a>
             </div>
           </div>
@@ -288,7 +288,7 @@ export default function Home() {
         <div style={{ display: "flex", whiteSpace: "nowrap", animation: "marquee 35s linear infinite" }}>
           {Array.from({ length: 12 }).map((_, i) => (
             <span key={i} className="font-mono" style={{ margin: "0 40px", fontSize: 10, fontWeight: 500, letterSpacing: "0.2em", color: "var(--text-muted)" }}>
-              PIXEL-PERFECT <span style={{ color: "var(--accent-dim)" }}>&#9670;</span> ANTI-SLOP <span style={{ color: "var(--accent-dim)" }}>&#9670;</span> RESPONSIVE <span style={{ color: "var(--accent-dim)" }}>&#9670;</span> SCREENSHOT-VERIFIED <span style={{ color: "var(--accent-dim)" }}>&#9670;</span> FIGMA-FAITHFUL
+              PIXEL-PERFECT <span style={{ color: "var(--accent-dim)" }}>&middot;</span> ANTI-SLOP <span style={{ color: "var(--accent-dim)" }}>&middot;</span> RESPONSIVE <span style={{ color: "var(--accent-dim)" }}>&middot;</span> SCREENSHOT-VERIFIED <span style={{ color: "var(--accent-dim)" }}>&middot;</span> FIGMA-FAITHFUL
             </span>
           ))}
         </div>
@@ -311,7 +311,7 @@ export default function Home() {
           <div style={{ display: "flex", whiteSpace: "nowrap", animation: "marquee 20s linear infinite reverse" }}>
             {Array.from({ length: 16 }).map((_, i) => (
               <span key={i} className="font-mono" style={{ margin: "0 24px", fontSize: 10, fontWeight: 700, letterSpacing: "0.2em" }}>
-                UI/UX BOOST &#9670; ANTAGONIST TO AI SLOP &#9670; PIXEL PERFECT &#9670; 2026
+                UI/UX BOOST &middot; ANTAGONIST TO AI SLOP &middot; PIXEL PERFECT &middot; 2026
               </span>
             ))}
           </div>
@@ -352,14 +352,14 @@ export default function Home() {
                 </div>
                 <div className="font-mono" style={{ fontSize: "clamp(10px, 1.2vw, 11px)", lineHeight: 2.2, flex: 1 }}>
                   <div><span style={{ color: "var(--green)" }}>$</span> /figma-faithful</div>
-                  <div style={{ color: "var(--accent)" }}>&#9670; {s.activated}</div>
+                  <div style={{ color: "var(--accent)" }}>&gt; {s.activated}</div>
                   <div style={{ color: "var(--text-muted)" }}>{s.sendLink}</div>
                   <div style={{ marginTop: 6 }}><span style={{ color: "var(--green)" }}>$</span> figma.com/design/abc...</div>
-                  <div style={{ color: "var(--text-muted)" }}>&#9654; {s.extracting}</div>
-                  <div style={{ color: "var(--text-muted)" }}>&#9654; {s.typography} <span style={{ color: "var(--text-primary)" }}>Estrella + DM Sans</span></div>
-                  <div style={{ color: "var(--accent)", marginTop: 6 }}>&#9670; {s.building}</div>
-                  <div style={{ color: "var(--green)" }}>&#10003; {s.matches375}</div>
-                  <div style={{ color: "var(--green)" }}>&#10003; {s.matches1440}</div>
+                  <div style={{ color: "var(--text-muted)" }}>&gt; {s.extracting}</div>
+                  <div style={{ color: "var(--text-muted)" }}>&gt; {s.typography} <span style={{ color: "var(--text-primary)" }}>Estrella + DM Sans</span></div>
+                  <div style={{ color: "var(--accent)", marginTop: 6 }}>&gt; {s.building}</div>
+                  <div style={{ color: "var(--green)" }}>+ {s.matches375}</div>
+                  <div style={{ color: "var(--green)" }}>+ {s.matches1440}</div>
                 </div>
               </div>
 
@@ -377,12 +377,12 @@ export default function Home() {
                     <div style={{ flex: 1, background: "var(--accent-dim)", border: "1px solid var(--border)", height: 60, display: "flex", alignItems: "center", justifyContent: "center" }}>
                       <span className="font-mono" style={{ fontSize: 8, color: "var(--text-primary)", letterSpacing: "0.15em" }}>FIGMA</span>
                     </div>
-                    <div style={{ display: "flex", alignItems: "center", color: "var(--text-muted)", fontSize: 14 }}>&#8644;</div>
+                    <div style={{ display: "flex", alignItems: "center", color: "var(--text-muted)", fontSize: 14 }}>&harr;</div>
                     <div style={{ flex: 1, background: "var(--surface)", border: "1px solid var(--border)", height: 60, display: "flex", alignItems: "center", justifyContent: "center" }}>
                       <span className="font-mono" style={{ fontSize: 8, color: "var(--text-muted)", letterSpacing: "0.15em" }}>BUILD</span>
                     </div>
                   </div>
-                  <div className="font-mono" style={{ textAlign: "center", fontSize: 11, color: "var(--green)", marginTop: 10 }}>&#10003; {s.pixelMatch}</div>
+                  <div className="font-mono" style={{ textAlign: "center", fontSize: 11, color: "var(--green)", marginTop: 10 }}>+ {s.pixelMatch}</div>
                 </div>
               </div>
 
@@ -393,7 +393,7 @@ export default function Home() {
                 <div style={{ marginTop: 20, display: "flex", flexDirection: "column", gap: 6, flex: 1 }}>
                   {["Inter / Roboto", "Purple gradients", "3 identical cards", "Glassmorphism", "Emoji as icons", "Uniform radius", "Stock hero images"].map((item) => (
                     <div key={item} style={{ display: "flex", alignItems: "center", gap: 8, padding: "5px 10px", borderLeft: "2px solid var(--red)" }}>
-                      <span style={{ color: "var(--red)", fontSize: 10, fontWeight: 700 }}>&#10005;</span>
+                      <span style={{ color: "var(--red)", fontSize: 10, fontWeight: 700 }}>x</span>
                       <span className="font-mono" style={{ fontSize: "clamp(10px, 1.2vw, 11px)", color: "var(--text-secondary)" }}>{item}</span>
                     </div>
                   ))}
@@ -440,7 +440,7 @@ export default function Home() {
         <div style={{ display: "flex", whiteSpace: "nowrap", animation: "marquee 25s linear infinite" }}>
           {Array.from({ length: 16 }).map((_, i) => (
             <span key={i} className="font-mono" style={{ margin: "0 24px", fontSize: 10, fontWeight: 700, letterSpacing: "0.2em" }}>
-              EXTRACT &#9670; IMPLEMENT &#9670; SCREENSHOT &#9670; COMPARE &#9670; SHIP
+              EXTRACT &middot; IMPLEMENT &middot; SCREENSHOT &middot; COMPARE &middot; SHIP
             </span>
           ))}
         </div>
@@ -501,10 +501,10 @@ export default function Home() {
 
           <div data-reveal className="delay-4" style={{ marginTop: 24, display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
             <a href="https://github.com/ojozinho/uiux-boost/archive/refs/heads/main.zip" style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "var(--accent)", fontSize: 14, textDecoration: "none", fontWeight: 500, transition: "opacity 0.3s" }}>
-              &#8595; {s.downloadZip}
+              <span style={{ display: "inline-block", width: 8, height: 8, borderRight: "1.5px solid currentColor", borderBottom: "1.5px solid currentColor", transform: "rotate(45deg)", marginBottom: 2 }} /> {s.downloadZip}
             </a>
             <a href="https://github.com/ojozinho/uiux-boost" target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "var(--text-secondary)", fontSize: 14, textDecoration: "none", transition: "opacity 0.3s" }}>
-              {s.viewGithub} &#8599;
+              {s.viewGithub} <span style={{ display: "inline-block", width: 8, height: 8, borderRight: "1.5px solid currentColor", borderTop: "1.5px solid currentColor", transform: "rotate(45deg)", marginLeft: 2 }} />
             </a>
           </div>
 
@@ -515,7 +515,7 @@ export default function Home() {
               <div style={{ wordBreak: "break-all" }}><span style={{ color: "var(--green)" }}>$</span> cp -r uiux-boost/skills/figma-faithful ~/.claude/skills/</div>
               <div style={{ color: "var(--text-muted)", marginTop: 8 }}>{s.runComment}</div>
               <div><span style={{ color: "var(--green)" }}>$</span> /figma-faithful</div>
-              <div style={{ color: "var(--accent)", marginTop: 8 }}>&#9670; {s.activated}</div>
+              <div style={{ color: "var(--accent)", marginTop: 8 }}>&gt; {s.activated}</div>
             </div>
           </div>
         </div>
