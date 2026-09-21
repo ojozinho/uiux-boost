@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 
 const ModelViewer = dynamic(() => import("@/components/ModelViewer").then((m) => m.ModelViewer), { ssr: false });
 const CustomCursor = dynamic(() => import("@/components/CustomCursor").then((m) => m.CustomCursor), { ssr: false });
+const CRTText = dynamic(() => import("@/components/CRTText").then((m) => m.CRTText), { ssr: false });
 
 const t = {
   en: {
@@ -212,6 +213,7 @@ export default function Home() {
   return (
     <div className="grain" style={{ minHeight: "100vh", overflowX: "hidden" }}>
       {!isTouch && <CustomCursor />}
+      <CRTText />
       <ModelViewer />
 
       {/* ═══ STICKY HEADER ═══ */}

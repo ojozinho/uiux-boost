@@ -126,6 +126,29 @@ a, button, [role="button"], .copy-btn { cursor: none; }
   50% { text-shadow: 0 0 40px rgba(255, 255, 255, 0.3), 0 0 80px rgba(255, 255, 255, 0.1); }
 }
 
+/* ── CRT / VHS EFFECTS ── */
+@keyframes crt-flicker {
+  0%, 100% { opacity: 1; }
+  8% { opacity: 0.7; }
+  9% { opacity: 1; }
+  50% { opacity: 0.95; }
+  52% { opacity: 0.6; }
+  53% { opacity: 1; }
+}
+
+@keyframes crt-glitch {
+  0%, 100% { transform: translateX(0); filter: blur(1px); }
+  20% { transform: translateX(-2px) skewX(-0.5deg); }
+  40% { transform: translateX(3px); filter: blur(2px); }
+  60% { transform: translateX(-1px) skewX(0.3deg); }
+  80% { transform: translateX(1px); }
+}
+
+@keyframes vhs-track {
+  0% { top: -10%; }
+  100% { top: 110%; }
+}
+
 /* ── SCROLL REVEAL ── */
 [data-reveal] {
   opacity: 0;
