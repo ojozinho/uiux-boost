@@ -68,13 +68,22 @@ a, button, [role="button"], .copy-btn { cursor: none; }
 .grain::before {
   content: '';
   position: fixed;
-  inset: 0;
+  inset: -200%;
   z-index: 9999;
   pointer-events: none;
-  opacity: 0.06;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.12;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-repeat: repeat;
-  background-size: 128px 128px;
+  background-size: 256px 256px;
+  animation: grain-shift 0.5s steps(6) infinite;
+}
+@keyframes grain-shift {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-5%, -5%); }
+  40% { transform: translate(3%, -8%); }
+  60% { transform: translate(-7%, 2%); }
+  80% { transform: translate(5%, 6%); }
+  100% { transform: translate(0, 0); }
 }
 .grain::after {
   content: '';
@@ -82,7 +91,7 @@ a, button, [role="button"], .copy-btn { cursor: none; }
   inset: 0;
   z-index: 9998;
   pointer-events: none;
-  background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.4) 100%);
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.5) 100%);
 }
 
 /* ── ANIMATIONS ── */
@@ -124,12 +133,6 @@ a, button, [role="button"], .copy-btn { cursor: none; }
 @keyframes glow-pulse {
   0%, 100% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.15); }
   50% { text-shadow: 0 0 40px rgba(255, 255, 255, 0.3), 0 0 80px rgba(255, 255, 255, 0.1); }
-}
-
-/* ── CRT / VHS EFFECTS ── */
-@keyframes vhs-track {
-  0% { top: -10%; }
-  100% { top: 110%; }
 }
 
 /* ── SCROLL REVEAL ── */

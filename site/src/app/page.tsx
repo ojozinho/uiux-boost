@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 
 const ModelViewer = dynamic(() => import("@/components/ModelViewer").then((m) => m.ModelViewer), { ssr: false });
 const CustomCursor = dynamic(() => import("@/components/CustomCursor").then((m) => m.CustomCursor), { ssr: false });
-const CRTText = dynamic(() => import("@/components/CRTText").then((m) => m.CRTText), { ssr: false });
+
 
 const t = {
   en: {
@@ -43,8 +43,8 @@ const t = {
       { n: "04", label: "COMPARE", desc: "Compares screenshots to Figma" },
       { n: "05", label: "FIX & SHIP", desc: "Fixes differences and deploys" },
     ],
-    quote: ['"If it looks like', 'AI made it,', 'it\'s wrong."'],
-    quoteRule: "THE RULE",
+    quote: "IF IT LOOKS LIKE AI MADE IT, IT'S WRONG.",
+    quoteRule: "",
     features: [
       { title: "Figma Reading", desc: "Pulls fonts, colors, spacing, and assets from your Figma file." },
       { title: "All Screen Sizes", desc: "Tested from 320px to 2560px. Works on everything." },
@@ -100,8 +100,8 @@ const t = {
       { n: "04", label: "COMPARAR", desc: "Compara screenshots com o Figma" },
       { n: "05", label: "CORRIGIR", desc: "Corrige diferenças e faz deploy" },
     ],
-    quote: ['"Se parece que', 'IA fez,', 'tá errado."'],
-    quoteRule: "A REGRA",
+    quote: "SE PARECE QUE IA FEZ, TÁ ERRADO.",
+    quoteRule: "",
     features: [
       { title: "Leitura do Figma", desc: "Puxa fontes, cores, espaçamentos e assets do seu arquivo." },
       { title: "Todos os Tamanhos", desc: "Testado de 320px a 2560px. Funciona em tudo." },
@@ -213,7 +213,6 @@ export default function Home() {
   return (
     <div className="grain" style={{ minHeight: "100vh", overflowX: "hidden" }}>
       {!isTouch && <CustomCursor />}
-      <CRTText />
       <ModelViewer />
 
       {/* ═══ STICKY HEADER ═══ */}
@@ -451,14 +450,9 @@ export default function Home() {
       <section style={{ padding: "clamp(60px, 12vw, 180px) clamp(16px, 4vw, 60px)", textAlign: "center", position: "relative", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", width: "min(600px, 90vw)", height: "min(600px, 90vw)", background: "radial-gradient(circle, rgba(255,255,255,0.02) 0%, transparent 60%)", pointerEvents: "none" }} />
         <div style={{ maxWidth: 900, margin: "0 auto", position: "relative", zIndex: 2 }}>
-          <blockquote data-reveal="scale" className="font-display" style={{ fontSize: "clamp(28px, 6vw, 90px)", lineHeight: 0.95, fontWeight: 800, textTransform: "uppercase" }}>
-            {s.quote[0]}
-            <br />{s.quote[1]}
-            <br /><span style={{ color: "var(--accent)", animation: "glow-pulse 4s ease-in-out infinite" }}>{s.quote[2]}</span>
+          <blockquote data-reveal="scale" className="font-display" style={{ fontSize: "clamp(24px, 5vw, 72px)", lineHeight: 1.05, fontWeight: 800, textTransform: "uppercase" }}>
+            {s.quote}
           </blockquote>
-          <p data-reveal className="delay-2 font-mono" style={{ marginTop: 32, fontSize: 10, letterSpacing: "0.3em", color: "var(--text-muted)" }}>
-            {s.quoteRule}
-          </p>
         </div>
       </section>
 
