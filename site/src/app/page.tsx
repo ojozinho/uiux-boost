@@ -164,10 +164,12 @@ export default function Home() {
         y: (e.clientY / window.innerHeight - 0.5) * 20,
       });
     };
+    const blockContext = (e: MouseEvent) => e.preventDefault();
     window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("mousemove", handleMouse, { passive: true });
+    document.addEventListener("contextmenu", blockContext);
 
-    return () => { observer.disconnect(); mo.disconnect(); window.removeEventListener("scroll", handleScroll); window.removeEventListener("mousemove", handleMouse); };
+    return () => { observer.disconnect(); mo.disconnect(); window.removeEventListener("scroll", handleScroll); window.removeEventListener("mousemove", handleMouse); document.removeEventListener("contextmenu", blockContext); };
   }, []);
 
   const copyCommand = () => {
