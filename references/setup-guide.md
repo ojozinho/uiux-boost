@@ -2,15 +2,20 @@
 
 Quick reference for setting up all integrations.
 
-## 1. Figma Personal Access Token
+## 1. Figma MCP Plugin
 
-1. Go to [figma.com](https://figma.com) > click your avatar > **Settings**
-2. Scroll to **Personal Access Tokens**
-3. Click **Generate new token**
-4. Name it something like "Claude Code"
-5. Scopes: **File content** (read-only is enough)
-6. Copy the token immediately (you can't see it again)
-7. The Figma MCP plugin in Claude Code will use this token
+The skill uses the Figma MCP plugin to read designs. You need to authenticate it before using Mode A.
+
+**In Claude Code CLI:**
+```
+claude mcp
+```
+Find the Figma plugin and follow the OAuth flow to connect your account.
+
+**In VS Code:**
+Go to Claude Code extension settings > MCP Servers > authorize the Figma plugin.
+
+This is OAuth-based — you don't paste a token in chat. The plugin handles auth on its own. Once connected, the skill can read any Figma file you have access to.
 
 ## 2. Vercel (Optional)
 
