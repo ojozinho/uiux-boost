@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 
 const ModelViewer = dynamic(() => import("@/components/ModelViewer").then((m) => m.ModelViewer), { ssr: false });
 const CustomCursor = dynamic(() => import("@/components/CustomCursor").then((m) => m.CustomCursor), { ssr: false });
+const TerminalDemo = dynamic(() => import("@/components/TerminalDemo").then((m) => m.TerminalDemo), { ssr: false });
 
 
 const t = {
@@ -51,11 +52,16 @@ const t = {
       { title: "No Figma Mode", desc: "Don't have Figma? It guides you through building from scratch." },
       { title: "Animations", desc: "Adds scroll, hover, and transition effects automatically." },
     ],
+    demoTitle: "See it",
+    demoHighlight: "running.",
+    demoLabel: "LIVE DEMO",
     getStarted: "INSTALL",
     oneCommand: "One command.",
     zeroDrama: "That's it.",
     installDesc: "Copy the skill folder to",
     andRun: "and run it.",
+    copyClone: "Copy",
+    copiedClone: "Copied!",
     copy: "Copy",
     copied: "Copied!",
     downloadZip: "Download ZIP",
@@ -108,11 +114,16 @@ const t = {
       { title: "Sem Figma", desc: "Não tem Figma? Ele te guia pra construir do zero." },
       { title: "Animações", desc: "Adiciona efeitos de scroll, hover e transição automaticamente." },
     ],
+    demoTitle: "Veja",
+    demoHighlight: "rodando.",
+    demoLabel: "DEMO AO VIVO",
     getStarted: "INSTALAR",
     oneCommand: "Um comando.",
     zeroDrama: "Só isso.",
     installDesc: "Copie a pasta da skill para",
     andRun: "e rode.",
+    copyClone: "Copiar",
+    copiedClone: "Copiado!",
     copy: "Copiar",
     copied: "Copiado!",
     downloadZip: "Baixar ZIP",
@@ -137,6 +148,7 @@ function useIsTouchDevice() {
 export default function Home() {
   const [lang, setLang] = useState<Lang>("en");
   const [copied, setCopied] = useState(false);
+  const [cloneCopied, setCloneCopied] = useState(false);
   const [headerVisible, setHeaderVisible] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const heroRef = useRef<HTMLDivElement>(null);
@@ -177,6 +189,12 @@ export default function Home() {
     navigator.clipboard.writeText("/figma-faithful");
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const copyClone = () => {
+    navigator.clipboard.writeText("git clone https://github.com/ojozinho/uiux-boost && cp -r uiux-boost/skills/figma-faithful ~/.claude/skills/");
+    setCloneCopied(true);
+    setTimeout(() => setCloneCopied(false), 2000);
   };
 
   const stepColors = ["var(--accent)", "var(--green)", "var(--gold)", "var(--accent)", "var(--green)"];
@@ -471,6 +489,18 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ═══ INTERACTIVE DEMO ═══ */}
+      <section style={{ padding: "clamp(60px, 10vw, 140px) clamp(16px, 4vw, 60px)", borderTop: "1px solid var(--border)" }}>
+        <div style={{ maxWidth: 700, margin: "0 auto", textAlign: "center" }}>
+          <span data-reveal className="font-mono" style={{ fontSize: 10, letterSpacing: "0.3em", color: "var(--accent-dim)" }}>{s.demoLabel}</span>
+          <h2 data-reveal className="delay-1 font-estrella" style={{ fontSize: "clamp(28px, 5vw, 64px)", lineHeight: 1, marginTop: 12, marginBottom: "clamp(24px, 4vw, 48px)" }}>
+            {s.demoTitle}
+            <br /><span className="text-gradient">{s.demoHighlight}</span>
+          </h2>
+          <TerminalDemo />
+        </div>
+      </section>
+
       {/* ═══ INSTALL ═══ */}
       <section id="install" style={{ padding: "clamp(60px, 10vw, 140px) clamp(16px, 4vw, 60px)", borderTop: "1px solid var(--border)" }}>
         <div style={{ maxWidth: 700, margin: "0 auto", textAlign: "center" }}>
@@ -508,7 +538,18 @@ export default function Home() {
             </a>
           </div>
 
-          <div data-reveal className="delay-5" style={{ marginTop: 48, textAlign: "left", maxWidth: 500, margin: "48px auto 0" }}>
+          <div data-reveal className="delay-5" style={{ marginTop: 48, textAlign: "left", maxWidth: 500, margin: "48px auto 0", position: "relative" }}>
+            <button
+              onClick={copyClone}
+              className="font-mono"
+              style={{
+                position: "absolute", top: 12, right: 12, fontSize: 9, letterSpacing: "0.1em",
+                background: cloneCopied ? "var(--green)" : "var(--surface)", color: cloneCopied ? "var(--bg)" : "var(--text-muted)",
+                border: "1px solid var(--border)", padding: "4px 10px", cursor: "pointer", zIndex: 2, transition: "all 0.3s",
+              }}
+            >
+              {cloneCopied ? s.copiedClone : s.copyClone}
+            </button>
             <div className="font-mono" style={{ fontSize: "clamp(9px, 2vw, 12px)", lineHeight: 2.2, color: "var(--text-secondary)", background: "var(--bg-card)", border: "1px solid var(--border)", padding: "clamp(16px, 3vw, 24px)", overflowX: "auto" }}>
               <div style={{ color: "var(--text-muted)", marginBottom: 8 }}>{s.cloneComment}</div>
               <div style={{ wordBreak: "break-all" }}><span style={{ color: "var(--green)" }}>$</span> git clone https://github.com/ojozinho/uiux-boost</div>
